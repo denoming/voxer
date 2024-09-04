@@ -1,0 +1,15 @@
+{
+  "default-registry": {
+    "kind": "git",
+    "baseline": "1de2026f28ead93ff1773e6e680387643e914ea1",
+    "repository": "https://github.com/microsoft/vcpkg"
+  },
+  "registries": [
+    {
+      "kind": "git",
+      "baseline": "f9446cc1a0aac98ebf67e255fa4da8668fe45365",
+      "repository": "git@github.com:denoming/vcpkg-registry.git",
+      "packages": [ "piper-phonemize" ]
+    }
+  ]
+}

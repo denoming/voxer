@@ -1,0 +1,21 @@
+{
+  "name": "voxer",
+  "version-semver": "0.0.1",
+  "maintainers": [
+    "Denys Asauliak <denoming@gmail.com>"
+  ],
+  "supports": "linux and !windows",
+  "dependencies": [
+    "fmt",
+    "spdlog",
+    "piper-phonemize"
+  ],
+  "features": {
+    "tests": {
+      "description": "Tests supporting",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
+}
