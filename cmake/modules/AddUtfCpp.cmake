@@ -1,0 +1,1 @@
+find_package(utf8cpp CONFIG REQUIRED)

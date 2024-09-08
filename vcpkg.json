@@ -8,7 +8,9 @@
   "dependencies": [
     "fmt",
     "spdlog",
-    "piper-phonemize"
+    "nlohmann-json",
+    "piper-phonemize",
+    "utfcpp"
   ],
   "features": {
     "tests": {

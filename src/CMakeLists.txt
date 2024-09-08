@@ -27,6 +27,9 @@ target_sources(${TARGET}
     PRIVATE
         Voxer.cpp
         VoxerImpl.cpp
+        Model.cpp
+        Synthesizer.cpp
+        SpeakNgLoader.cpp
 )
 
 target_include_directories(${TARGET}
@@ -37,10 +40,12 @@ target_include_directories(${TARGET}
 target_link_libraries(${TARGET}
         PRIVATE fmt::fmt
                 spdlog::spdlog
+                nlohmann_json::nlohmann_json
+                utf8::cpp utf8cpp::utf8cpp
                 Piper::Phonemize
 )
 
-target_compile_features(${TARGET} PUBLIC cxx_std_17)
+target_compile_features(${TARGET} PUBLIC cxx_std_20)
 
 # Generate export header file with export macros
 generate_export_header(${TARGET}
