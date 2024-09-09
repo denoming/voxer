@@ -8,8 +8,12 @@ set_target_properties(${TARGET}
 )
 
 target_sources(${TARGET}
-    PRIVATE src/test.cpp
+    PRIVATE src/TextToAudioTest.cpp
 )
+
+if(VOXER_ENABLE_FILE_SAVING)
+    target_sources(${TARGET} PRIVATE src/TextToFileTest.cpp)
+endif()
 
 target_link_libraries(
     ${TARGET}

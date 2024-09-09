@@ -1,18 +1,18 @@
 #pragma once
 
-#include "Types.hpp"
-#include "VoxerExport.hpp"
+#include "voxer/Types.hpp"
+#include "voxer/VoxerExport.hpp"
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <functional>
 
 namespace jar {
 
 class VOXER_EXPORT Voxer {
 public:
-    using Callback = std::function<void()>;
+    using PrerollCallback = std::function<void(int sampleRate, int sampleSize, int channels)>;
+    using BufferCallback = std::function<void(AudioBuffer& buffer)>;
 
     Voxer();
 
@@ -32,8 +32,14 @@ public:
     void
     cleanup();
 
+    void
+    onPreroll(PrerollCallback callback);
+
+    void
+    onBuffer(BufferCallback callback);
+
     SynthesisResult
-    textToAudio(std::string text, std::vector<int16_t>& buffer, const Callback& callback = nullptr);
+    textToAudio(std::string text, AudioBuffer& buffer);
 
 private:
     std::unique_ptr<class VoxerImpl> _impl;

@@ -41,10 +41,22 @@ Voxer::cleanup()
     return _impl->cleanup();
 }
 
-SynthesisResult
-Voxer::textToAudio(std::string text, std::vector<int16_t>& buffer, const Callback& callback)
+void
+Voxer::onPreroll(PrerollCallback callback)
 {
-    return _impl->textToAudio(std::move(text), buffer, callback);
+    return _impl->onPreroll(std::move(callback));
+}
+
+void
+Voxer::onBuffer(BufferCallback callback)
+{
+    return _impl->onBuffer(std::move(callback));
+}
+
+SynthesisResult
+Voxer::textToAudio(std::string text, AudioBuffer& buffer)
+{
+    return _impl->textToAudio(std::move(text), buffer);
 }
 
 } // namespace jar

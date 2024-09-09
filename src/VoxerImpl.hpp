@@ -1,8 +1,8 @@
 #pragma once
 
 #include "voxer/Types.hpp"
+#include "voxer/FileSaver.hpp"
 
-#include "Types.hpp"
 #include "Model.hpp"
 #include "Synthesizer.hpp"
 #include "SpeakNgLoader.hpp"
@@ -15,7 +15,8 @@ namespace jar {
 
 class VoxerImpl {
 public:
-    using Callback = std::function<void()>;
+    using PrerollCallback = std::function<void(int sampleRate, int sampleSize, int channels)>;
+    using BufferCallback = std::function<void(AudioBuffer& buffer)>;
 
     VoxerImpl() = default;
 
@@ -28,10 +29,25 @@ public:
     void
     cleanup();
 
+    void
+    onPreroll(PrerollCallback callback);
+
+    void
+    onBuffer(BufferCallback callback);
+
     [[nodiscard]] SynthesisResult
-    textToAudio(std::string text, AudioBuffer& buffer, const Callback& callback);
+    textToAudio(std::string text, AudioBuffer& buffer);
 
 private:
+    [[nodiscard]] bool
+    notifyPreroll(int sampleRate, int sampleSize, int channels) const;
+
+    [[nodiscard]] bool
+    notifyBuffer(AudioBuffer& buffer) const;
+
+private:
+    PrerollCallback _prerollCallback;
+    BufferCallback _bufferCallback;
     std::unique_ptr<SpeakNgLoader> _speakNgLoader;
     std::unique_ptr<Model> _model;
     std::unique_ptr<Synthesizer> _synthesizer;

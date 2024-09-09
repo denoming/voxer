@@ -24,6 +24,13 @@ set_target_properties(${TARGET}
 )
 
 target_sources(${TARGET}
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS "${PROJECT_SOURCE_DIR}/include"
+                  "${CMAKE_CURRENT_BINARY_DIR}"
+        FILES "${PROJECT_SOURCE_DIR}/include/voxer/Voxer.hpp"
+              "${PROJECT_SOURCE_DIR}/include/voxer/Types.hpp"
+              "${CMAKE_CURRENT_BINARY_DIR}/voxer/VoxerExport.hpp"
     PRIVATE
         Voxer.cpp
         VoxerImpl.cpp
@@ -45,67 +52,35 @@ target_link_libraries(${TARGET}
                 Piper::Phonemize
 )
 
+# Modify target if file saving is enabled
+if(VOXER_ENABLE_FILE_SAVING)
+    target_sources(${TARGET}
+        PUBLIC
+            FILE_SET HEADERS
+            FILES "${PROJECT_SOURCE_DIR}/include/voxer/FileSaver.hpp"
+                  "${PROJECT_SOURCE_DIR}/include/voxer/FileSavers.hpp"
+        PRIVATE FileSavers.cpp
+                WavFileSaver.cpp
+    )
+    target_link_libraries(${TARGET} PRIVATE SndFile::sndfile)
+endif()
+
 target_compile_features(${TARGET} PUBLIC cxx_std_20)
 
 # Generate export header file with export macros
 generate_export_header(${TARGET}
     BASE_NAME VOXER
-    EXPORT_FILE_NAME VoxerExport.hpp
+    EXPORT_FILE_NAME voxer/VoxerExport.hpp
 )
 
 # Install target files except namelink file
 install(TARGETS ${TARGET}
-    EXPORT VoxerRuntime
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
         COMPONENT VoxerRuntime
-        NAMELINK_SKIP
-    INCLUDES
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-# Install target namelink file
-install(TARGETS ${TARGET}
-    EXPORT VoxerDevelopment
-    LIBRARY
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        COMPONENT VoxerDevelopment
-        NAMELINK_ONLY
-    ARCHIVE
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        COMPONENT VoxerDevelopment
-    INCLUDES
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-# Install package config file
-install(EXPORT VoxerRuntime
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    NAMESPACE My::
-    COMPONENT VoxerRuntime
-    FILE VoxerRuntime.cmake
-)
-
-# Install package config file
-install(EXPORT VoxerDevelopment
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    NAMESPACE My::
-    COMPONENT VoxerDevelopment
-    FILE VoxerDevelopment.cmake
-)
-
-# Install library header files
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
-    TYPE INCLUDE
-    COMPONENT VoxerDevelopment
-    FILES_MATCHING
-        PATTERN *.hpp
-)
-
-# Install export header file
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CalculatorExport.hpp
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/voxer
-    COMPONENT VoxerDevelopment
+        NAMELINK_COMPONENT VoxerDevelopment
+    FILE_SET HEADERS
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # Generate package config and version file

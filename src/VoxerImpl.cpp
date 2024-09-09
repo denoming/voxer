@@ -31,34 +31,53 @@ VoxerImpl::cleanup()
     _synthesizer.reset();
 }
 
+void
+VoxerImpl::onPreroll(PrerollCallback callback)
+{
+    _prerollCallback = std::move(callback);
+}
+
+void
+VoxerImpl::onBuffer(BufferCallback callback)
+{
+    _bufferCallback = std::move(callback);
+}
+
 SynthesisResult
-VoxerImpl::textToAudio(std::string text, AudioBuffer& buffer, const Callback& callback)
+VoxerImpl::textToAudio(std::string text, AudioBuffer& buffer)
 {
     SynthesisResult result;
 
-    const SynthesisConfig& synthesisConfig = _model->synthesisConfig();
-    const PhonemizeConfig& phonemizeConfig = _model->phonemizeConfig();
+    const SynthesisConfig& sConfig = _model->synthesisConfig();
+    const PhonemizeConfig& pConfig = _model->phonemizeConfig();
 
     std::size_t silenceSamples{};
-    if (synthesisConfig.sentenceSilenceSeconds > 0) {
-        silenceSamples = static_cast<std::size_t>(synthesisConfig.sentenceSilenceSeconds
-                                                  * static_cast<float>(synthesisConfig.sampleRate)
-                                                  * static_cast<float>(synthesisConfig.channels));
+    if (sConfig.sentenceSilenceSeconds > 0) {
+        silenceSamples = static_cast<std::size_t>(sConfig.sentenceSilenceSeconds
+                                                  * static_cast<float>(sConfig.sampleRate)
+                                                  * static_cast<float>(sConfig.channels));
     }
 
     // Phonemes for each sentence
     SPDLOG_DEBUG("Phonemizing text: {}", text);
     std::vector<Phonemes> phonemes;
 
-    if (phonemizeConfig.phonemeType == eSpeakPhonemes) {
+    if (pConfig.phonemeType == eSpeakPhonemes) {
         // Use espeak-ng for phonemization
         piper::eSpeakPhonemeConfig eSpeakConfig;
-        eSpeakConfig.voice = phonemizeConfig.eSpeak.voice;
+        eSpeakConfig.voice = pConfig.eSpeak.voice;
         phonemize_eSpeak(std::move(text), eSpeakConfig, phonemes);
     } else {
         // Use UTF-8 codepoints as "phonemes"
         piper::CodepointsPhonemeConfig codepointsConfig;
         piper::phonemize_codepoints(std::move(text), codepointsConfig, phonemes);
+    }
+
+    if (notifyPreroll(sConfig.sampleRate, sConfig.sampleWidth, sConfig.channels)) {
+        SPDLOG_DEBUG("Send pre-roll notification: sampleRate<{}>, sampleWidth<{}>, channels<{}>",
+                     sConfig.sampleRate,
+                     sConfig.sampleWidth,
+                     sConfig.channels);
     }
 
     // Synthesize each sentence independently.
@@ -81,11 +100,11 @@ VoxerImpl::textToAudio(std::string text, AudioBuffer& buffer, const Callback& ca
 
         // Use phoneme/id map from config
         piper::PhonemeIdConfig idConfig;
-        idConfig.phonemeIdMap = std::make_shared<PhonemeIdsMap>(phonemizeConfig.phonemeIdsMap);
+        idConfig.phonemeIdMap = std::make_shared<PhonemeIdsMap>(pConfig.phonemeIdsMap);
 
-        if (synthesisConfig.phonemeSilenceSeconds) {
+        if (sConfig.phonemeSilenceSeconds) {
             // Split into phrases
-            auto& phonemeSilenceSeconds = synthesisConfig.phonemeSilenceSeconds.value();
+            auto& phonemeSilenceSeconds = sConfig.phonemeSilenceSeconds.value();
 
             auto phrasePhonemes = std::make_shared<Phonemes>();
             allPhrasePhonemes.push_back(phrasePhonemes);
@@ -97,8 +116,7 @@ VoxerImpl::textToAudio(std::string text, AudioBuffer& buffer, const Callback& ca
                     // Split at phrase boundary
                     const auto [_, len] = *phonemeIt;
                     phraseSilenceSamples.push_back(static_cast<std::size_t>(len)
-                                                   * synthesisConfig.sampleRate
-                                                   * synthesisConfig.channels);
+                                                   * sConfig.sampleRate * sConfig.channels);
 
                     phrasePhonemes = std::make_shared<Phonemes>();
                     allPhrasePhonemes.push_back(phrasePhonemes);
@@ -160,8 +178,8 @@ VoxerImpl::textToAudio(std::string text, AudioBuffer& buffer, const Callback& ca
             }
         }
 
-        if (callback) {
-            callback();
+        if (notifyBuffer(buffer)) {
+            SPDLOG_DEBUG("Buffer notification: size<{}>", buffer.size());
             buffer.clear();
         }
 
@@ -185,6 +203,26 @@ VoxerImpl::textToAudio(std::string text, AudioBuffer& buffer, const Callback& ca
     }
 
     return result;
+}
+
+bool
+VoxerImpl::notifyPreroll(const int sampleRate, const int sampleSize, const int channels) const
+{
+    if (_prerollCallback) {
+        _prerollCallback(sampleRate, sampleSize, channels);
+        return true;
+    }
+    return false;
+}
+
+bool
+VoxerImpl::notifyBuffer(AudioBuffer& buffer) const
+{
+    if (_bufferCallback) {
+        _bufferCallback(buffer);
+        return true;
+    }
+    return false;
 }
 
 } // namespace jar
