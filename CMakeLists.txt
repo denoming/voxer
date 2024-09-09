@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: MIT
+#
+# (c) Copyright 2024
+# Denys Asauliak, denoming@gmail.com
+
 cmake_minimum_required(VERSION 3.28)
 
 project(voxer VERSION 0.0.1)

@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: MIT
+#
+# (c) Copyright 2024
+# Denys Asauliak, denoming@gmail.com
+
 include(CheckCCompilerFlag)
 
 option(ENABLE_COMPILER_CHECKING

@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: MIT
+#
+# (c) Copyright 2024
+# Denys Asauliak, denoming@gmail.com
+
 include(GNUInstallDirs)
 
 set(stageDir ${CMAKE_CURRENT_BINARY_DIR}/stage)

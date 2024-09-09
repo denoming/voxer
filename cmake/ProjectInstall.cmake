@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: MIT
+#
+# (c) Copyright 2024
+# Denys Asauliak, denoming@gmail.com
 
 if (NOT WIN32 AND CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     # Set default install prefix path

@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: MIT
+#
+# (c) Copyright 2024
+# Denys Asauliak, denoming@gmail.com
+
 get_property(isMultiConfig GLOBAL
     PROPERTY GENERATOR_IS_MULTI_CONFIG
 )

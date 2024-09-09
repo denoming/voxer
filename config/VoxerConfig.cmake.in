@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: MIT
+#
+# (c) Copyright 2024
+# Denys Asauliak, denoming@gmail.com
+
 if(CMAKE_VERSION VERSION_LESS 3.3)
     set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Voxer requires CMake 3.3 or later")
     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
