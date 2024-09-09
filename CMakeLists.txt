@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.28)
 
-project(voxer VERSION 0.0.1)
+project(voxer VERSION 0.1.0)
 
 include(cmake/ProjectOptions.cmake)
 include(cmake/ProjectConfigs.cmake)
