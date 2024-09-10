@@ -80,12 +80,21 @@ generate_export_header(${TARGET}
 
 # Install target files except namelink file
 install(TARGETS ${TARGET}
+    EXPORT VoxerTargets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
         COMPONENT VoxerRuntime
         NAMELINK_COMPONENT VoxerDevelopment
     FILE_SET HEADERS
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Install package config file
+install(EXPORT VoxerTargets
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
+        NAMESPACE Voxer::
+        COMPONENT VoxerRuntime
+        FILE VoxerTargets.cmake
 )
 
 # Generate package config and version file
