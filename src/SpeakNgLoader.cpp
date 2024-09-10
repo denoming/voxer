@@ -13,7 +13,7 @@ namespace jar {
 
 SpeakNgLoader::SpeakNgLoader(const std::string& filesPath)
 {
-    SPDLOG_DEBUG("Initializing eSpeak using <{}> data path", dataPath);
+    SPDLOG_DEBUG("Initializing eSpeak using <{}> data path", filesPath);
     if (espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, 0, filesPath.data(), 0) < 0) {
         throw std::runtime_error("Unable to initialize eSpeak-ng");
     }

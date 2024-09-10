@@ -238,7 +238,7 @@ Model::loadConfig(const std::string& configPath, SpeakerId speakerId)
 {
     SPDLOG_DEBUG("Parsing <{}> config file with <{}> speaker",
                  configPath,
-                 (speakerId == SpeakerId::Default) ? "default" : fmt::to_string(speakerId));
+                 (speakerId == SpeakerId::Default) ? "default" : fmt::to_string(int(speakerId)));
 
     std::ifstream modelConfigFile{configPath};
     auto configRoot = json::parse(modelConfigFile);
