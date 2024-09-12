@@ -7,18 +7,15 @@
 
 #include "voxer/Types.hpp"
 #include "voxer/VoxerExport.hpp"
+#include "voxer/DataHandler.hpp"
 
 #include <memory>
 #include <string>
-#include <functional>
 
 namespace jar {
 
 class VOXER_EXPORT Voxer {
 public:
-    using PrerollCallback = std::function<void(int sampleRate, int sampleSize, int channels)>;
-    using BufferCallback = std::function<void(AudioBuffer& buffer)>;
-
     Voxer();
 
     ~Voxer();
@@ -37,14 +34,8 @@ public:
     void
     cleanup();
 
-    void
-    onPreroll(PrerollCallback callback);
-
-    void
-    onBuffer(BufferCallback callback);
-
     SynthesisResult
-    textToAudio(std::string text, AudioBuffer& buffer);
+    textToAudio(std::string text, DataHandler& handler);
 
 private:
     std::unique_ptr<class VoxerImpl> _impl;

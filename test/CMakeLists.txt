@@ -16,15 +16,23 @@ target_sources(${TARGET}
     PRIVATE src/TextToAudioTest.cpp
 )
 
-if(VOXER_ENABLE_FILE_SAVING)
-    target_sources(${TARGET} PRIVATE src/TextToFileTest.cpp)
-endif()
-
 target_link_libraries(
     ${TARGET}
     PRIVATE Voxer::Voxer
             GTest::gtest_main GTest::gmock_main
 )
+
+if(VOXER_ENABLE_FORMATTED)
+    target_sources(${TARGET}
+        PRIVATE src/TextToFileTest.cpp
+                src/TextToPlaybackTest.cpp
+    )
+target_link_libraries(
+    ${TARGET}
+    PRIVATE PkgConfig::Gst
+            PkgConfig::GstApp
+)
+endif()
 
 if (NOT CMAKE_CROSSCOMPILING)
     gtest_discover_tests(${TARGET} TEST_LIST testList)

@@ -25,6 +25,8 @@ using PhonemesMap = std::map<piper::Phoneme, Phonemes>;
 using PhonemeIds = std::vector<piper::PhonemeId>;
 using PhonemeIdsMap = std::map<piper::Phoneme, PhonemeIds>;
 
+using AudioBuffer = std::vector<int16_t>;
+
 struct eSpeakConfig {
     std::string voice{"en-us"};
 };

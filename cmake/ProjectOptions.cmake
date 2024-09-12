@@ -13,12 +13,12 @@ add_feature_info(
     VOXER_ENABLE_TESTS VOXER_ENABLE_TESTS "Build project with tests"
 )
 
-option(VOXER_ENABLE_FILE_SAVING "Enable file saving support" ON)
-if(VOXER_ENABLE_FILE_SAVING)
-    list(APPEND VOXER_ENABLE_FILE_SAVING "files-saving")
+option(VOXER_ENABLE_FORMATTED "Enable formatted audio data support" ON)
+if(VOXER_ENABLE_FORMATTED)
+    list(APPEND VOXER_ENABLE_FORMATTED "formatted")
 endif()
 add_feature_info(
-    VOXER_ENABLE_FILE_SAVING VOXER_ENABLE_FILE_SAVING "Build project with tests"
+    VOXER_ENABLE_FORMATTED VOXER_ENABLE_FORMATTED "Build project with formatted audio data support"
 )
 
 feature_summary(WHAT ALL)

@@ -35,6 +35,7 @@ target_sources(${TARGET}
                   "${CMAKE_CURRENT_BINARY_DIR}"
         FILES "${PROJECT_SOURCE_DIR}/include/voxer/Voxer.hpp"
               "${PROJECT_SOURCE_DIR}/include/voxer/Types.hpp"
+              "${PROJECT_SOURCE_DIR}/include/voxer/DataHandler.hpp"
               "${CMAKE_CURRENT_BINARY_DIR}/voxer/VoxerExport.hpp"
     PRIVATE
         Voxer.cpp
@@ -42,6 +43,7 @@ target_sources(${TARGET}
         Model.cpp
         Synthesizer.cpp
         SpeakNgLoader.cpp
+        DataHandler.cpp
 )
 
 target_include_directories(${TARGET}
@@ -58,14 +60,14 @@ target_link_libraries(${TARGET}
 )
 
 # Modify target if file saving is enabled
-if(VOXER_ENABLE_FILE_SAVING)
+if(VOXER_ENABLE_FORMATTED)
     target_sources(${TARGET}
         PUBLIC
             FILE_SET HEADERS
-            FILES "${PROJECT_SOURCE_DIR}/include/voxer/FileSaver.hpp"
-                  "${PROJECT_SOURCE_DIR}/include/voxer/FileSavers.hpp"
-        PRIVATE FileSavers.cpp
-                WavFileSaver.cpp
+            FILES "${PROJECT_SOURCE_DIR}/include/voxer/FormattedDataHandler.hpp"
+                  "${PROJECT_SOURCE_DIR}/include/voxer/FormattedDataSaver.hpp"
+        PRIVATE FormattedDataHandler.cpp
+                FormattedDataSaver.cpp
     )
     target_link_libraries(${TARGET} PRIVATE SndFile::sndfile)
 endif()

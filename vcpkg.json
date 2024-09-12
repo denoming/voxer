@@ -16,11 +16,12 @@
     "tests": {
       "description": "Testing support",
       "dependencies": [
-        "gtest"
+        "gtest",
+        "gstreamer"
       ]
     },
-    "file-saving": {
-      "description": "File saving support",
+    "formatted": {
+      "description": "Formatted audio data support",
       "dependencies": [
         "libsndfile"
       ]

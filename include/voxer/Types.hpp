@@ -5,10 +5,6 @@
 
 #pragma once
 
-#include <vector>
-
-#include <cstdint>
-
 namespace jar {
 
 enum class SpeakerId {
@@ -21,6 +17,6 @@ struct SynthesisResult {
     double realTimeFactor{};
 };
 
-using AudioBuffer = std::vector<int16_t>;
+enum class DataFormat { Wav };
 
 } // namespace jar

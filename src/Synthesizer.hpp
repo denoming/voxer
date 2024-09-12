@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "voxer/Types.hpp"
 #include "Model.hpp"
 
 namespace jar {

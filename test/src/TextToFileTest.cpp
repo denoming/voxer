@@ -7,7 +7,7 @@
 #include <gmock/gmock.h>
 
 #include <voxer/Voxer.hpp>
-#include <voxer/FileSavers.hpp>
+#include <voxer/FormattedDataSaver.hpp>
 
 #include <filesystem>
 
@@ -23,28 +23,14 @@ TEST(Voxer, TextToFile)
 {
     ASSERT_TRUE(fs::exists(kModelPath));
 
-    Voxer voxer;
-    EXPECT_NO_THROW(voxer.configure(kModelPath));
+    FormattedDataSaver handler{DataFormat::Wav, kOutputFile};
 
-    auto fileSaver = getWavFileSaver();
-    ASSERT_TRUE(fileSaver);
-
-    voxer.onPreroll([&fileSaver](const int sampleRate, const int sampleSize, const int channels) {
-        // Open file for writing
-        EXPECT_NO_THROW(fileSaver->open(kOutputFile, sampleRate, sampleSize, channels));
+    EXPECT_NO_THROW({
+        Voxer voxer;
+        voxer.configure(kModelPath);
+        voxer.textToAudio("Hello world", handler);
+        voxer.cleanup();
     });
-    voxer.onBuffer([&fileSaver](const AudioBuffer& buffer) {
-        // Save audio buffer to a file
-        EXPECT_NO_THROW(fileSaver->write(buffer));
-    });
-
-    {
-        std::vector<int16_t> audioBuffer;
-        EXPECT_NO_THROW(voxer.textToAudio("Hello world", audioBuffer));
-        EXPECT_THAT(audioBuffer, IsEmpty());
-    }
-
-    EXPECT_NO_THROW(voxer.cleanup());
 
     EXPECT_THAT(fs::file_size(kOutputFile), Gt(0));
     fs::remove(kOutputFile);
