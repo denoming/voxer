@@ -159,7 +159,7 @@ TextToPlaybackTest::destroyPipeline() const
     gst_object_unref(_pipeline);
 }
 
-TEST_F(TextToPlaybackTest, TextToPlayback)
+TEST_F(TextToPlaybackTest, SynthesizeTextAndPlayback)
 {
     createPipeline();
     startPipeline();

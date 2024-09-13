@@ -20,7 +20,7 @@ public:
     MOCK_METHOD(void, onEnd, (const SynthesisResult& result), (override));
 };
 
-TEST(Voxer, TextToAudio)
+TEST(TextToAudioTest, SynthesizeText)
 {
     Voxer voxer;
     EXPECT_NO_THROW(voxer.configure(kModelPath));

@@ -19,7 +19,7 @@ static const char* kOutputFile{"SavingToFile.wav"};
 using namespace jar;
 using namespace testing;
 
-TEST(Voxer, TextToFile)
+TEST(TextToFileTest, SynthesizeTextWithSaving)
 {
     ASSERT_TRUE(fs::exists(kModelPath));
 
