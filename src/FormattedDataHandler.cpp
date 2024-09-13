@@ -9,6 +9,7 @@
 #include <spdlog/spdlog.h>
 
 #include <functional>
+#include <vector>
 
 namespace jar {
 
@@ -28,8 +29,9 @@ public:
     using OnData = void(const void* ptr, size_t size);
     using OnEnd = void(const SynthesisResult&);
 
-    explicit Impl(const DataFormat format)
+    explicit Impl(const DataFormat format, const size_t defaultSize = 16 * 1024)
         : _format{format}
+        , _buffer(defaultSize)
     {
     }
 
@@ -85,6 +87,11 @@ public:
     void
     finalize(const SynthesisResult& result)
     {
+        notifyData(_buffer.data(), _buffer.size());
+
+        _buffer.clear();
+        _buffer.shrink_to_fit();
+
         if (_handle) {
             _handle = SndfileHandle();
         }
@@ -151,11 +158,18 @@ private:
     [[nodiscard]] sf_count_t
     processFormattedData(const void* ptr, const sf_count_t count)
     {
+        if (_buffer.size() < _offset + count) {
+            std::vector<uint8_t> buffer(_offset + count);
+            memcpy(buffer.data(), _buffer.data(), _offset);
+            _buffer.swap(buffer);
+        }
+
+        memcpy(_buffer.data() + _offset, ptr, count);
+        _offset += count;
+
         if (_offset > _length) {
             _length = _offset;
         }
-
-        notifyData(ptr, count);
 
         return count;
     }
@@ -201,6 +215,7 @@ private:
     DataFormat _format{};
     sf_count_t _offset{};
     sf_count_t _length{};
+    std::vector<uint8_t> _buffer;
     std::function<OnBegin> _beginCallback;
     std::function<OnData> _dataCallback;
     std::function<OnEnd> _endCallback;
