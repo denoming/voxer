@@ -169,6 +169,7 @@ VoxerImpl::textToAudio(std::string text, DataHandler& handler)
 
         SPDLOG_DEBUG("Data: ptr<{}>, size<{}>", fmt::ptr(buffer.data()), buffer.size());
         handler.onData(buffer.data(), buffer.size());
+        buffer.clear();
 
         phonemeIds.clear();
     }
