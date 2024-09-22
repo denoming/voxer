@@ -14,6 +14,7 @@
 
 #include <string>
 #include <memory>
+#include <filesystem>
 
 namespace jar {
 
@@ -22,8 +23,8 @@ public:
     VoxerImpl() = default;
 
     void
-    configure(const std::string& filesPath,
-              const std::string& modelPath,
+    configure(const std::filesystem::path& filesPath,
+              const std::filesystem::path& modelPath,
               bool useCuda = false,
               SpeakerId speakerId = SpeakerId::Default);
 

@@ -11,11 +11,13 @@
 #include <spdlog/spdlog.h>
 #include <utf8cpp/utf8.h>
 
+namespace fs = std::filesystem;
+
 namespace jar {
 
 void
-VoxerImpl::configure(const std::string& filesPath,
-                     const std::string& modelPath,
+VoxerImpl::configure(const fs::path& filesPath,
+                     const fs::path& modelPath,
                      bool useCuda,
                      SpeakerId speakerId)
 {

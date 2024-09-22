@@ -13,8 +13,9 @@
 
 namespace fs = std::filesystem;
 
-static const char* kModelPath{"voices/en_GB-alba-medium.onnx"};
-static const char* kOutputFile{"SavingToFile.wav"};
+static auto kModelPath{"voxer/voices/en_GB-alba-medium.onnx"};
+static auto kFilesPath{"espeak-ng-data"};
+static const char* kOutputFile{"Speech.wav"};
 
 using namespace jar;
 using namespace testing;
@@ -27,7 +28,7 @@ TEST(TextToFileTest, SynthesizeTextWithSaving)
 
     EXPECT_NO_THROW({
         Voxer voxer;
-        voxer.configure(kModelPath);
+        voxer.configure(kFilesPath, kModelPath, false, SpeakerId::Default);
         voxer.textToAudio("Hello world", handler);
         voxer.cleanup();
     });

@@ -8,7 +8,8 @@
 
 #include <voxer/Voxer.hpp>
 
-static const char* kModelPath{"voices/en_GB-alba-medium.onnx"};
+static auto kModelPath{"voxer/voices/en_GB-alba-medium.onnx"};
+static auto kFilesPath{"espeak-ng-data"};
 
 using namespace jar;
 using namespace testing;
@@ -23,7 +24,7 @@ public:
 TEST(TextToAudioTest, SynthesizeText)
 {
     Voxer voxer;
-    EXPECT_NO_THROW(voxer.configure(kModelPath));
+    EXPECT_NO_THROW(voxer.configure(kFilesPath, kModelPath, false, SpeakerId::Default));
 
     MockDataHandler handler;
     EXPECT_CALL(handler, onBegin(Gt(0), Gt(0), Gt(0))).Times(1);

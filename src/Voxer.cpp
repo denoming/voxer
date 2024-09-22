@@ -22,18 +22,18 @@ Voxer::Voxer()
 Voxer::~Voxer() = default;
 
 void
-Voxer::configure(const std::string& modelPath, const bool useCuda, const SpeakerId speakerId)
+Voxer::configure(const fs::path& modelPath, const bool useCuda, const SpeakerId speakerId)
 {
-    if (const auto filesPath = fs::current_path() / "files"; fs::exists(filesPath)) {
+    if (const auto filesPath = fs::current_path() / "espeak-ng-data"; fs::exists(filesPath)) {
         configure(filesPath, modelPath, useCuda, speakerId);
     } else {
-        throw std::runtime_error{fmt::format("Data path not found: {}", filesPath)};
+        throw std::runtime_error{fmt::format("Files path not found: {}", filesPath)};
     }
 }
 
 void
-Voxer::configure(const std::string& filesPath,
-                 const std::string& modelPath,
+Voxer::configure(const fs::path& filesPath,
+                 const fs::path& modelPath,
                  const bool useCuda,
                  const SpeakerId speakerId)
 {
