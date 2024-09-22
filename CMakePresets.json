@@ -1,0 +1,48 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "include": [
+    "cmake/presets/LegacyPresets.json",
+    "cmake/presets/VcpkgPresets.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "debug",
+      "hidden": false,
+      "inherits": ["dc-debug-vcpkg"],
+      "binaryDir": "build-debug",
+      "displayName": "Debug",
+      "cacheVariables": {
+        "VOXER_ACTIVE_LOG_LEVEL": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": false,
+      "inherits": ["dc-release-vcpkg"],
+      "binaryDir": "build-release",
+      "displayName": "Release",
+      "cacheVariables": {
+        "VOXER_ACTIVE_LOG_LEVEL": "Info"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-debug",
+      "displayName": "Build [Debug]",
+      "configurePreset": "debug",
+      "jobs": 0
+    },
+    {
+      "name": "build-release",
+      "displayName": "Build [Release]",
+      "configurePreset": "release",
+      "jobs": 0
+    }
+  ]
+}
