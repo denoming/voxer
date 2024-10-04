@@ -3,7 +3,7 @@
 ## Introduction
 
 **Voxer** is a tiny text to speech C++ library.
-Based on [piper-phonemize](https://github.com/rhasspy/piper-phonemize) neural text to speech system.
+Based on [piper-phonemize](https://github.com/denoming/piper-phonemize) neural text to speech system.
 
 ## Building
 
