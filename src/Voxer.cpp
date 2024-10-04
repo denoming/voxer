@@ -7,13 +7,10 @@
 
 #include "VoxerImpl.hpp"
 
-#include <fmt/std.h>
-
-#include <filesystem>
-
 namespace fs = std::filesystem;
 
 namespace jar {
+
 Voxer::Voxer()
     : _impl{new VoxerImpl}
 {
@@ -21,23 +18,25 @@ Voxer::Voxer()
 
 Voxer::~Voxer() = default;
 
-void
-Voxer::configure(const fs::path& modelPath, const bool useCuda, const SpeakerId speakerId)
+bool
+Voxer::configure(const bool useCuda, const SpeakerId speakerId)
 {
-    if (const auto filesPath = fs::current_path() / "espeak-ng-data"; fs::exists(filesPath)) {
-        configure(filesPath, modelPath, useCuda, speakerId);
-    } else {
-        throw std::runtime_error{fmt::format("Files path not found: {}", filesPath)};
-    }
+    return _impl->configure(useCuda, speakerId);
 }
 
-void
-Voxer::configure(const fs::path& filesPath,
-                 const fs::path& modelPath,
+bool
+Voxer::configure(const fs::path& modelPath, const bool useCuda, const SpeakerId speakerId)
+{
+    return _impl->configure(modelPath, useCuda, speakerId);
+}
+
+bool
+Voxer::configure(const fs::path& modelPath,
+                 const fs::path& filesPath,
                  const bool useCuda,
                  const SpeakerId speakerId)
 {
-    return _impl->configure(filesPath, modelPath, useCuda, speakerId);
+    return _impl->configure(modelPath, filesPath, useCuda, speakerId);
 }
 
 void

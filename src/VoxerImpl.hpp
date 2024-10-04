@@ -22,9 +22,17 @@ class VoxerImpl {
 public:
     VoxerImpl() = default;
 
-    void
-    configure(const std::filesystem::path& filesPath,
-              const std::filesystem::path& modelPath,
+    bool
+    configure(bool useCuda = false, SpeakerId speakerId = SpeakerId::Default);
+
+    bool
+    configure(const std::filesystem::path& modelPath,
+              bool useCuda = false,
+              SpeakerId speakerId = SpeakerId::Default);
+
+    bool
+    configure(const std::filesystem::path& modelPath,
+              const std::filesystem::path& filesPath,
               bool useCuda = false,
               SpeakerId speakerId = SpeakerId::Default);
 

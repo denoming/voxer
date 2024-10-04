@@ -17,19 +17,28 @@ namespace jar {
 
 class VOXER_EXPORT Voxer {
 public:
-    static inline auto kFilesDefaultPath{"/usr/share/"};
-
     Voxer();
 
     ~Voxer();
 
     /**
-     * Configures library.
+     * Configures library.\n
+     * Uses \p VOXER_MODEL_DIR env variable to retrieve path to model file.\n
+     * Uses \p VOXER_FILES_DIR env variable to retrieve path to files dir.
+     * @param useCuda the flag to use CUDA or not
+     * @param speakerId the index of speaker to use (see *.onnx.json model config file)
+     */
+    [[nodiscard]] bool
+    configure(bool useCuda = false, SpeakerId speakerId = SpeakerId::Default);
+
+    /**
+     * Configures library.\n
+     * Uses \p VOXER_FILES_DIR env variable to retrieve path to files dir.
      * @param modelPath the path to model file (*.onnx file)
      * @param useCuda the flag to use CUDA or not
      * @param speakerId the index of speaker to use (see *.onnx.json model config file)
      */
-    void
+    [[nodiscard]] bool
     configure(const std::filesystem::path& modelPath,
               bool useCuda = false,
               SpeakerId speakerId = SpeakerId::Default);
@@ -41,9 +50,9 @@ public:
      * @param useCuda the flag to use CUDA or not
      * @param speakerId the index of speaker to use (see *.onnx.json model config file)
      */
-    void
-    configure(const std::filesystem::path& filesPath,
-              const std::filesystem::path& modelPath,
+    [[nodiscard]] bool
+    configure(const std::filesystem::path& modelPath,
+              const std::filesystem::path& filesPath,
               bool useCuda,
               SpeakerId speakerId);
 

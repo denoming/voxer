@@ -13,26 +13,27 @@
 
 namespace fs = std::filesystem;
 
-static auto kModelPath{"voxer/voices/en_GB-alba-medium.onnx"};
-static auto kFilesPath{"espeak-ng-data"};
-static const char* kOutputFile{"Speech.wav"};
+static const auto* kAudioFile{"output.wav"};
 
 using namespace jar;
 using namespace testing;
 
+/**
+ * Following env variables must be set:
+ *  - VOXER_MODEL_DIR
+ *  - VOXER_FILES_DIR
+ **/
 TEST(TextToFileTest, SynthesizeTextWithSaving)
 {
-    ASSERT_TRUE(fs::exists(kModelPath));
-
-    FormattedDataSaver handler{DataFormat::Wav, kOutputFile};
+    FormattedDataSaver handler{DataFormat::Wav, kAudioFile};
 
     EXPECT_NO_THROW({
         Voxer voxer;
-        voxer.configure(kFilesPath, kModelPath, false, SpeakerId::Default);
+        ASSERT_TRUE(voxer.configure());
         voxer.textToAudio("Hello world", handler);
         voxer.cleanup();
     });
 
-    EXPECT_THAT(fs::file_size(kOutputFile), Gt(0));
-    fs::remove(kOutputFile);
+    EXPECT_THAT(fs::file_size(kAudioFile), Gt(0));
+    fs::remove(kAudioFile);
 }

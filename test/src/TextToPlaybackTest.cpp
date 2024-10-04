@@ -17,9 +17,6 @@
 using namespace jar;
 using namespace testing;
 
-static auto kModelPath{"voxer/voices/en_GB-alba-medium.onnx"};
-static auto kFilesPath{"espeak-ng-data"};
-
 static const char* kPipelineDescription = R"(
     appsrc name=src ! wavparse ! audioconvert ! audioresample ! autoaudiosink
 )";
@@ -161,15 +158,22 @@ TextToPlaybackTest::destroyPipeline() const
     gst_object_unref(_pipeline);
 }
 
+/**
+ * Following env variables must be set:
+ *  - VOXER_MODEL_DIR
+ *  - VOXER_FILES_DIR
+ **/
 TEST_F(TextToPlaybackTest, SynthesizeTextAndPlayback)
 {
     createPipeline();
     startPipeline();
 
-    Voxer voxer;
-    EXPECT_NO_THROW(voxer.configure(kFilesPath, kModelPath, false, SpeakerId::Default));
-    voxer.textToAudio("Hello world", *this);
-    EXPECT_NO_THROW(voxer.cleanup());
+    EXPECT_NO_THROW({
+        Voxer voxer;
+        ASSERT_TRUE(voxer.configure());
+        voxer.textToAudio("Hello world", *this);
+        voxer.cleanup();
+    });
 
     waitPipeline();
     destroyPipeline();
