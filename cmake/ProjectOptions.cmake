@@ -21,4 +21,9 @@ add_feature_info(
     VOXER_ENABLE_FORMATTED VOXER_ENABLE_FORMATTED "Build project with formatted audio data support"
 )
 
+option(VOXER_VOICES_DOWNLOAD "Enable voices downloading" OFF)
+add_feature_info(
+    VOXER_VOICES_DOWNLOAD VOXER_VOICES_DOWNLOAD "Enable voices downloading"
+)
+
 feature_summary(WHAT ALL)
