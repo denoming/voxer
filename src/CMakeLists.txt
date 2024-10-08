@@ -5,7 +5,6 @@
 
 include(GNUInstallDirs)
 include(GenerateExportHeader)
-include(CMakePackageConfigHelpers)
 
 set(TARGET voxer)
 
@@ -59,7 +58,6 @@ target_link_libraries(${TARGET}
                 Piper::Phonemize
 )
 
-# Modify target if file saving is enabled
 if(VOXER_ENABLE_FORMATTED)
     target_sources(${TARGET}
         PUBLIC
@@ -74,13 +72,11 @@ endif()
 
 target_compile_features(${TARGET} PUBLIC cxx_std_20)
 
-# Generate export header file with export macros
 generate_export_header(${TARGET}
     BASE_NAME VOXER
     EXPORT_FILE_NAME voxer/VoxerExport.hpp
 )
 
-# Install target files except namelink file
 install(TARGETS ${TARGET}
     EXPORT VoxerTargets
     LIBRARY
@@ -91,34 +87,9 @@ install(TARGETS ${TARGET}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Install package config file
 install(EXPORT VoxerTargets
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
         NAMESPACE Voxer::
         COMPONENT VoxerRuntime
         FILE VoxerTargets.cmake
-)
-
-# Generate package config and version file
-configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/config/VoxerConfig.cmake.in
-    VoxerConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/VoxerConfigVersion.cmake
-    COMPATIBILITY SameMajorVersion
-)
-
-# Install package config and version file
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/VoxerConfig.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    COMPONENT VoxerDevelopment
-)
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/VoxerConfigVersion.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    COMPONENT VoxerDevelopment
 )
