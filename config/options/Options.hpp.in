@@ -1,0 +1,6 @@
+
+#cmakedefine VOXER_ENABLE_TESTS
+#cmakedefine VOXER_ENABLE_FORMATTED
+#cmakedefine VOXER_VOICES_DOWNLOAD
+#cmakedefine VOXER_VOICES_LIST_PROCESSED
+#cmakedefine VOXER_VOICES_LIST_DIR
