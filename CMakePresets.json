@@ -2,8 +2,8 @@
   "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 28,
-    "patch": 0
+    "minor": 25,
+    "patch": 1
   },
   "include": [
     "cmake/presets/LegacyPresets.json",
@@ -29,6 +29,18 @@
       "cacheVariables": {
         "VOXER_ACTIVE_LOG_LEVEL": "Info"
       }
+    },
+    {
+      "name": "debug-docker",
+      "inherits": ["debug"],
+      "binaryDir": "build-debug-docker",
+      "displayName": "Debug [Docker]"
+    },
+    {
+      "name": "release-docker",
+      "inherits": ["release"],
+      "binaryDir": "build-release-docker",
+      "displayName": "Release [Docker]"
     }
   ],
   "buildPresets": [
@@ -42,6 +54,18 @@
       "name": "build-release",
       "displayName": "Build [Release]",
       "configurePreset": "release",
+      "jobs": 0
+    },
+    {
+      "name": "build-debug-docker",
+      "displayName": "Build [Debug]",
+      "configurePreset": "debug-docker",
+      "jobs": 0
+    },
+    {
+      "name": "build-release-docker",
+      "displayName": "Build [Release]",
+      "configurePreset": "release-docker",
       "jobs": 0
     }
   ]
