@@ -7,7 +7,7 @@
   "registries": [
     {
       "kind": "git",
-      "baseline": "a934081e3b1704a046c32cf7e6892ca9530cb3c3",
+      "baseline": "ec99d51c7bfa23cfb79241d721b2b97e3bdb17ba",
       "repository": "git@github.com:denoming/vcpkg-registry.git",
       "packages": [ "piper-phonemize" ]
     }
