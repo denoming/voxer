@@ -23,7 +23,10 @@
     "formatted": {
       "description": "Formatted audio data support",
       "dependencies": [
-        "libsndfile"
+        {
+          "name": "libsndfile",
+          "default-features": false
+        }
       ]
     }
   }
