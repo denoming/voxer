@@ -15,7 +15,7 @@ add_feature_info(
 
 option(VOXER_ENABLE_FORMATTED "Enable formatted audio data support" ON)
 if(VOXER_ENABLE_FORMATTED)
-    list(APPEND VOXER_ENABLE_FORMATTED "formatted")
+    list(APPEND VCPKG_MANIFEST_FEATURES "formatted")
 endif()
 add_feature_info(
     VOXER_ENABLE_FORMATTED VOXER_ENABLE_FORMATTED "Build project with formatted audio data support"
