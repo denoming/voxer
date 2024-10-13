@@ -16,7 +16,7 @@ USER root
 RUN apt update \
  && apt install -y build-essential autoconf automake autopoint sudo vim git \
                    cmake ninja-build gdb curl tar zip unzip sudo dbus flex \
-                   bison nasm texinfo wget libpulse-dev
+                   bison nasm texinfo wget file libpulse-dev
 
 # Create custom user
 RUN groupadd -f -g $USER_GID $USER_NAME \
