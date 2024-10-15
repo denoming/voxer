@@ -16,7 +16,8 @@ USER root
 RUN apt update \
  && apt install -y build-essential autoconf automake autopoint sudo vim git \
                    cmake ninja-build gdb curl tar zip unzip sudo dbus flex \
-                   bison nasm texinfo wget file libpulse-dev
+                   bison nasm texinfo wget file libpulse-dev \
+                   libespeak-ng-dev espeak-ng-data
 
 # Create custom user
 RUN groupadd -f -g $USER_GID $USER_NAME \
@@ -24,8 +25,18 @@ RUN groupadd -f -g $USER_GID $USER_NAME \
  && echo $USER_NAME:$USER_NAME | chpasswd \
  && echo $USER_NAME 'ALL=(ALL) NOPASSWD:SETENV: ALL' > /etc/sudoers.d/010_$USER_NAME || true
 
+# Install ONNX Runtime Library
+RUN wget -qO- https://github.com/microsoft/onnxruntime/releases/download/v1.19.2/onnxruntime-linux-aarch64-1.19.2.tgz | tar xz -C /tmp \
+ && cd /tmp/onnxruntime-linux-aarch64-1.19.2 \
+ && mkdir -p /usr/local/include/onnxruntime \
+ && cp -pr include/* /usr/local/include/onnxruntime \
+ && cp -pr lib/* /usr/local/lib \
+ && cd $HOME \
+ && rm -fr /tmp/onnxruntime-linux-aarch64-1.19.2*
+
 USER $USER_NAME
 
+# Install vcpkg
 RUN wget -O /tmp/vcpkg.zip https://github.com/microsoft/vcpkg/archive/refs/tags/2024.09.30.zip \
  && unzip -q /tmp/vcpkg.zip -d /tmp/vcpkg \
  && mv /tmp/vcpkg/vcpkg-2024.09.30 $VCPKG_ROOT \
