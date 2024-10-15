@@ -16,8 +16,7 @@
     "tests": {
       "description": "Testing support",
       "dependencies": [
-        "gtest",
-        "gstreamer"
+        "gtest"
       ]
     },
     "formatted": {
