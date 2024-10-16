@@ -3,13 +3,5 @@
     "kind": "git",
     "baseline": "1de2026f28ead93ff1773e6e680387643e914ea1",
     "repository": "https://github.com/microsoft/vcpkg"
-  },
-  "registries": [
-    {
-      "kind": "git",
-      "baseline": "ec99d51c7bfa23cfb79241d721b2b97e3bdb17ba",
-      "repository": "git@github.com:denoming/vcpkg-registry.git",
-      "packages": [ "piper-phonemize" ]
-    }
-  ]
+  }
 }

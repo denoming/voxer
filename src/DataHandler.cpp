@@ -12,7 +12,7 @@ namespace jar {
 void
 DataHandler::onBegin(int sampleRate, int sampleSize, int channels)
 {
-    SPDLOG_DEBUG("onPrepare(sampleRate<{}>, sampleSize<{}>, channels<{}>)",
+    SPDLOG_DEBUG("onBegin(sampleRate<{}>, sampleSize<{}>, channels<{}>)",
                  sampleRate,
                  sampleSize,
                  channels);
@@ -27,7 +27,7 @@ DataHandler::onData(const void* ptr, unsigned int count)
 void
 DataHandler::onEnd(const SynthesisResult& result)
 {
-    SPDLOG_DEBUG("onComplete(inferSeconds<{}>, audioSeconds<{}>, realTimeFactor<{}>)",
+    SPDLOG_DEBUG("onEnd(inferSeconds<{}>, audioSeconds<{}>, realTimeFactor<{}>)",
                  result.inferSeconds,
                  result.audioSeconds,
                  result.realTimeFactor);

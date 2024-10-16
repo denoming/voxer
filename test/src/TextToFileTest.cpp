@@ -30,7 +30,7 @@ TEST(TextToFileTest, SynthesizeTextWithSaving)
     EXPECT_NO_THROW({
         Voxer voxer;
         ASSERT_TRUE(voxer.configure());
-        voxer.textToAudio("Hello world", handler);
+        voxer.textToAudio("Hello world. This world is very beautiful.", handler);
         voxer.cleanup();
     });
 

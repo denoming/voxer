@@ -5,14 +5,23 @@
 
 #pragma once
 
-#include "Model.hpp"
+#include "Types.hpp"
+
+#include <string>
 
 namespace jar {
+
+class Model;
+class DataHandler;
 
 class Synthesizer {
 public:
     explicit Synthesizer(Model& model);
 
+    [[maybe_unused]] SynthesisResult
+    synthesize(std::string text, DataHandler& handler);
+
+private:
     [[maybe_unused]] SynthesisResult
     synthesize(PhonemeIds& phonemeIds, AudioBuffer& audioBuffer) const;
 

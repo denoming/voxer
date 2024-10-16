@@ -4,8 +4,15 @@
 // Denys Asauliak, denoming@gmail.com
 
 #include "Synthesizer.hpp"
+#include "Model.hpp"
+#include "TextTranslator.hpp"
+#include "PhonemesMatcher.hpp"
+
+#include "voxer/Types.hpp"
+#include "voxer/DataHandler.hpp"
 
 #include <spdlog/spdlog.h>
+#include <utf8cpp/utf8.h>
 
 #include <chrono>
 #include <limits>
@@ -47,8 +54,119 @@ scale(const float input, const float scaleFactor)
 } // namespace
 
 Synthesizer::Synthesizer(Model& model)
-    : _model(model)
+    : _model{model}
 {
+}
+
+SynthesisResult
+Synthesizer::synthesize(std::string text, DataHandler& handler)
+{
+    const SynthesisConfig& sConfig = _model.synthesisConfig();
+    const PhonemizeConfig& pConfig = _model.phonemizeConfig();
+
+    std::size_t silenceSamples{};
+    if (sConfig.sentenceSilenceSeconds > 0) {
+        silenceSamples = static_cast<std::size_t>(sConfig.sentenceSilenceSeconds
+                                                  * static_cast<float>(sConfig.sampleRate)
+                                                  * static_cast<float>(sConfig.channels));
+    }
+
+    PhonemeSentences sentences;
+    if (pConfig.phonemeType == eSpeakPhonemes) {
+        SPDLOG_DEBUG("Phonemizing text (sentences): {}", text);
+        eSpeakPhonemeConfig eSpeakConfig;
+        eSpeakConfig.voice = pConfig.eSpeak.voice;
+        sentences = TextTranslator{text, eSpeakConfig}.release();
+    } else {
+        SPDLOG_DEBUG("Phonemizing text (codepoints): {}", text);
+        CodepointsPhonemeConfig codepointsConfig;
+        sentences = TextTranslator{text, codepointsConfig}.release();
+    }
+
+    handler.onBegin(sConfig.sampleRate, sConfig.sampleWidth, sConfig.channels);
+
+    // Synthesize each sentence independently.
+    SynthesisResult result;
+    for (const PhonemeSentence& sentence : sentences) {
+        std::vector<size_t> phraseSilenceSamples;
+
+        // Use phoneme/id map from config
+        PhonemeIdConfig idConfig;
+        idConfig.phonemeIdMap = std::make_shared<PhonemeIdsMap>(pConfig.phonemeIdsMap);
+
+        std::vector<std::shared_ptr<Phonemes>> allPhrasePhonemes;
+        if (sConfig.phonemeSilenceSeconds) {
+            // Split into phrases
+            auto& phonemeSilenceSeconds = sConfig.phonemeSilenceSeconds.value();
+
+            auto phrasePhonemes = std::make_shared<Phonemes>();
+            allPhrasePhonemes.push_back(phrasePhonemes);
+
+            for (const char32_t phoneme : sentence) {
+                phrasePhonemes->push_back(phoneme);
+                if (auto phonemeIt = phonemeSilenceSeconds.find(phoneme);
+                    phonemeIt != std::cend(phonemeSilenceSeconds)) {
+                    // Split at phrase boundary
+                    const auto [_, len] = *phonemeIt;
+                    phraseSilenceSamples.push_back(static_cast<std::size_t>(len)
+                                                   * sConfig.sampleRate * sConfig.channels);
+
+                    phrasePhonemes = std::make_shared<Phonemes>();
+                    allPhrasePhonemes.push_back(phrasePhonemes);
+                }
+            }
+        } else {
+            // Use all phonemes
+            allPhrasePhonemes.push_back(std::make_shared<Phonemes>(sentence));
+        }
+
+        // Ensure results/samples are the same size
+        std::vector<SynthesisResult> phraseResults;
+        while (phraseResults.size() < allPhrasePhonemes.size()) {
+            phraseResults.emplace_back();
+        }
+
+        while (phraseSilenceSamples.size() < allPhrasePhonemes.size()) {
+            phraseSilenceSamples.push_back(0);
+        }
+
+        { // Phonemes => IDs => Audio
+            AudioBuffer buffer;
+            for (size_t phraseIdx = 0; phraseIdx < allPhrasePhonemes.size(); phraseIdx++) {
+                const auto& phrasePhoneme = allPhrasePhonemes[phraseIdx];
+                if (phrasePhoneme->empty()) {
+                    continue;
+                }
+
+                PhonemeIds phonemeIds = PhonemesMatcher{*phrasePhoneme, idConfig}.release();
+                phraseResults[phraseIdx] = synthesize(phonemeIds, buffer);
+                for (std::size_t i = 0; i < phraseSilenceSamples[phraseIdx]; i++) {
+                    buffer.push_back(0);
+                }
+                phonemeIds.clear();
+
+                result.audioSeconds += phraseResults[phraseIdx].audioSeconds;
+                result.inferSeconds += phraseResults[phraseIdx].inferSeconds;
+            }
+
+            // Add end of sentence silence
+            if (silenceSamples > 0) {
+                for (std::size_t i = 0; i < silenceSamples; i++) {
+                    buffer.push_back(0);
+                }
+            }
+
+            handler.onData(buffer.data(), buffer.size());
+        }
+    }
+
+    if (result.audioSeconds > 0) {
+        result.realTimeFactor = result.inferSeconds / result.audioSeconds;
+    }
+
+    handler.onEnd(result);
+
+    return result;
 }
 
 SynthesisResult

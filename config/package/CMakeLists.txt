@@ -18,11 +18,11 @@ write_basic_package_version_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/VoxerConfig.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    COMPONENT VoxerDevelopment
+    COMPONENT Voxer_Development
 )
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/VoxerConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
-    COMPONENT VoxerDevelopment
+    COMPONENT Voxer_Development
 )

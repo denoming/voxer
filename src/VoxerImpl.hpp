@@ -10,7 +10,6 @@
 
 #include "Model.hpp"
 #include "Synthesizer.hpp"
-#include "SpeakNgLoader.hpp"
 
 #include <string>
 #include <memory>
@@ -43,7 +42,6 @@ public:
     textToAudio(std::string text, DataHandler& handler);
 
 private:
-    std::unique_ptr<SpeakNgLoader> _speakNgLoader;
     std::unique_ptr<Model> _model;
     std::unique_ptr<Synthesizer> _synthesizer;
 };

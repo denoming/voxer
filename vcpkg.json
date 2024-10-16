@@ -9,8 +9,8 @@
     "fmt",
     "spdlog",
     "nlohmann-json",
-    "piper-phonemize",
-    "utfcpp"
+    "utfcpp",
+    "uni-algo"
   ],
   "features": {
     "tests": {

@@ -6,9 +6,15 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 set(CPACK_PACKAGE_NAME "voxer")
+set(CPACK_PACKAGE_CONTACT "maintainer@denoming.com")
 set(CPACK_PACKAGE_VENDOR "DENOMING")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Voxer Project")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
+set(CPACK_COMPONENTS_ALL
+    Voxer_Runtime
+    Voxer_Development
+)
+set(CPACK_COMPONENTS_GROUPING ONE_PER_GROUP)
 set(CPACK_VERBATIM_VARIABLES YES)
 set(CPACK_SOURCE_IGNORE_FILES
     /\\.git/
@@ -44,9 +50,15 @@ endif()
 
 include(CPack)
 
-cpack_add_component(VoxerRuntime
+cpack_add_component(Voxer_Runtime
     DISPLAY_NAME Runtime
-    DESCRIPTION "Voxer application"
+    DESCRIPTION "Voxer library runtime"
     REQUIRED
 )
 
+cpack_add_component(Voxer_Development
+    DISPLAY_NAME Development
+    DESCRIPTION "Voxer library development"
+    DEPENDS Voxer_Runtime
+    REQUIRED
+)

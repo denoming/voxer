@@ -171,7 +171,7 @@ TEST_F(TextToPlaybackTest, SynthesizeTextAndPlayback)
     EXPECT_NO_THROW({
         Voxer voxer;
         ASSERT_TRUE(voxer.configure());
-        voxer.textToAudio("Hello world", *this);
+        voxer.textToAudio("Hello world. This world is very beautiful.", *this);
         voxer.cleanup();
     });
 

@@ -5,6 +5,8 @@
 
 #include "Model.hpp"
 
+#include "Types.hpp"
+
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include <utf8cpp/utf8.h>
@@ -18,7 +20,7 @@ static const char* kInstanceName{"voxer"};
 namespace jar {
 
 // Get the first UTF-8 codepoint of a string
-static piper::Phoneme
+static Phoneme
 getCodepoint(std::string s)
 {
     utf8::iterator character_iter(s.begin(), s.begin(), s.end());
@@ -29,6 +31,7 @@ getCodepoint(std::string s)
 static bool
 isSingleCodepoint(std::string s)
 {
+
     return utf8::distance(s.begin(), s.end()) == 1;
 }
 
@@ -58,7 +61,7 @@ parsePhonemizeConfig(json& configRoot, PhonemizeConfig& phonemizeConfig)
             if (not isSingleCodepoint(fromPhoneme)) {
                 std::stringstream idsStr;
                 for (auto& toIdValue : fromPhonemeItem.value()) {
-                    piper::PhonemeId toId = toIdValue.get<piper::PhonemeId>();
+                    PhonemeId toId = toIdValue.get<PhonemeId>();
                     idsStr << toId << ",";
                 }
 
@@ -69,7 +72,7 @@ parsePhonemizeConfig(json& configRoot, PhonemizeConfig& phonemizeConfig)
 
             auto fromCodepoint = getCodepoint(fromPhoneme);
             for (auto& toIdValue : fromPhonemeItem.value()) {
-                piper::PhonemeId toId = toIdValue.get<piper::PhonemeId>();
+                PhonemeId toId = toIdValue.get<PhonemeId>();
                 phonemizeConfig.phonemeIdsMap[fromCodepoint].push_back(toId);
             }
         }
