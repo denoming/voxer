@@ -1,4 +1,4 @@
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/config/generators")
+include(CPackComponent)
 
 # Set default packaging install prefix path
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -16,6 +16,7 @@ set(CPACK_COMPONENTS_ALL
 )
 set(CPACK_COMPONENTS_GROUPING ONE_PER_GROUP)
 set(CPACK_VERBATIM_VARIABLES YES)
+set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_IGNORE_FILES
     /\\.git/
     /\\.idea/
@@ -39,6 +40,7 @@ if (EXISTS "${PROJECT_SOURCE_DIR}/README.md")
     set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/config/generators")
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CPACK_GENERATOR "TGZ;DEB")
     include(tgzFormat)
@@ -48,17 +50,27 @@ else()
     include(tgzFormat)
 endif()
 
-include(CPack)
-
 cpack_add_component(Voxer_Runtime
     DISPLAY_NAME Runtime
-    DESCRIPTION "Voxer library runtime"
+    DESCRIPTION "Voxer runtime library"
     REQUIRED
 )
 
 cpack_add_component(Voxer_Development
     DISPLAY_NAME Development
-    DESCRIPTION "Voxer library development"
+    DESCRIPTION "Voxer develop library"
     DEPENDS Voxer_Runtime
     REQUIRED
 )
+
+if(VOXER_VOICES_DOWNLOAD)
+    list(APPEND CPACK_COMPONENTS_ALL Voxer_Data)
+    cpack_add_component(Voxer_Data
+        DISPLAY_NAME Data
+        DESCRIPTION "Voxer data files"
+        DEPENDS Voxer_Runtime
+        REQUIRED
+    )
+endif()
+
+include(CPack)

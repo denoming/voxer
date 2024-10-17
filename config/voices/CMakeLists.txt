@@ -1,9 +1,5 @@
 include_guard()
 
-if(VOXER_VOICES_LIST_PROCESSED)
-    return()
-endif()
-
 set(VOXER_VOICES_LIST_DIR
     "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/voices"
     CACHE STRING "Base dir of voices")
@@ -62,7 +58,15 @@ function(DownloadVoices downloadVoices)
     endforeach()
 endfunction()
 
-DownloadVoices("${VOXER_VOICES_LIST}")
+if(NOT VOXER_VOICES_LIST_PROCESSED)
+    DownloadVoices("${VOXER_VOICES_LIST}")
+    set(VOXER_VOICES_LIST_PROCESSED ON
+        CACHE BOOL "Indicator whether voices are downloaded")
+endif()
 
-set(VOXER_VOICES_LIST_PROCESSED ON
-    CACHE BOOL "Indicator whether voices are downloaded")
+include(GNUInstallDirs)
+install(
+    DIRECTORY "${VOXER_VOICES_LIST_DIR}"
+    TYPE DATA
+    COMPONENT Voxer_Data
+)
