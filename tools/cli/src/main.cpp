@@ -5,6 +5,7 @@
 
 #include "voxer/Voxer.hpp"
 #include "voxer/FormattedDataSaver.hpp"
+#include "FormattedDataOutputStream.hpp"
 
 #include <cxxopts.hpp>
 #include <nlohmann/json.hpp>
@@ -21,7 +22,7 @@ using namespace nlohmann;
 namespace fs = std::filesystem;
 namespace krn = std::chrono;
 
-enum class OutputType { ToFile, ToDir };
+enum class OutputType { ToStdOut, ToFile, ToDir };
 
 static struct {
     std::optional<fs::path> model;
@@ -55,8 +56,13 @@ parseArgs(const cxxopts::ParseResult& result)
     }
 
     if (result.count("output-file")) {
-        config.outputPath = fs::absolute(result["output-file"].as<std::string>());
-        config.outputType = OutputType::ToFile;
+        const std::string outputFile = result["output-file"].as<std::string>();
+        if (outputFile == "-") {
+            config.outputType = OutputType::ToStdOut;
+        } else {
+            config.outputPath = fs::absolute(result["output-file"].as<std::string>());
+            config.outputType = OutputType::ToFile;
+        }
     }
 
     if (result.count("output-dir")) {
@@ -119,6 +125,11 @@ handleInput(std::istream& is)
                 config.speaker = static_cast<SpeakerId>(root["speaker"].get<int>());
             }
         }
+        if (config.outputType == OutputType::ToStdOut) {
+            FormattedDataOutputStream handler{DataFormat::Wav, std::cout};
+            voxer.textToAudio(input, handler);
+            continue;
+        }
         if (config.outputType == OutputType::ToDir) {
             const fs::path filePath = config.outputPath / generateFileName();
             FormattedDataSaver handler{DataFormat::Wav, filePath};
@@ -153,7 +164,7 @@ main(const int argc, char* argv[])
     options.add_options()
         ("m,model", "Path to ONNX model file", cxxopts::value<std::string>())
         ("f,files", "Path to eSpeak data files", cxxopts::value<std::string>())
-        ("of,output-file", "Path to output file", cxxopts::value<std::string>()->default_value("output.wav"))
+        ("of,output-file", "Path to output file ('-' output to STDOUT)", cxxopts::value<std::string>()->default_value("-"))
         ("od,output-dir", "Path to output dir (default: current working dir)", cxxopts::value<std::string>())
         ("j,json", "Interpret input in JSON format")
         ("c,cuda", "Use CUDA")

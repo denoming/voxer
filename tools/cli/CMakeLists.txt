@@ -13,6 +13,7 @@ add_executable(Voxer::Voxer::Cli ALIAS ${TARGET})
 target_sources(${TARGET}
     PRIVATE
         src/main.cpp
+        src/FormattedDataOutputStream.cpp
 )
 
 target_link_libraries(${TARGET}
