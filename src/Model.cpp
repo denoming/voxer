@@ -31,7 +31,6 @@ getCodepoint(std::string s)
 static bool
 isSingleCodepoint(std::string s)
 {
-
     return utf8::distance(s.begin(), s.end()) == 1;
 }
 

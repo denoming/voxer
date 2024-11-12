@@ -13,6 +13,14 @@ add_feature_info(
     VOXER_ENABLE_TESTS VOXER_ENABLE_TESTS "Build project with enabled unit tests"
 )
 
+option(VOXER_ENABLE_CLI "Enable build CLI" OFF)
+if(VOXER_ENABLE_CLI)
+    list(APPEND VCPKG_MANIFEST_FEATURES "cli")
+endif()
+add_feature_info(
+    VOXER_ENABLE_CLI VOXER_ENABLE_CLI "Build project with enabled CLI"
+)
+
 option(VOXER_ENABLE_FORMATTED "Enable formatted audio data support" ON)
 if(VOXER_ENABLE_FORMATTED)
     list(APPEND VCPKG_MANIFEST_FEATURES "formatted")

@@ -13,14 +13,20 @@
     "uni-algo"
   ],
   "features": {
+    "cli": {
+      "description": "Enable CLI feature",
+      "dependencies": [
+        "cxxopts"
+      ]
+    },
     "tests": {
-      "description": "Testing support",
+      "description": "Enable unit tests",
       "dependencies": [
         "gtest"
       ]
     },
     "formatted": {
-      "description": "Formatted audio data support",
+      "description": "Enable formatted handlers feature",
       "dependencies": [
         {
           "name": "libsndfile",

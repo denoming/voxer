@@ -17,7 +17,8 @@
       "binaryDir": "build-debug",
       "displayName": "Debug",
       "cacheVariables": {
-        "VOXER_ACTIVE_LOG_LEVEL": "Debug"
+        "VOXER_ACTIVE_LOG_LEVEL": "Debug",
+        "VOXER_ENABLE_CLI": true
       },
       "errors": {
         "dev": false,
@@ -35,7 +36,8 @@
       "binaryDir": "build-release",
       "displayName": "Release",
       "cacheVariables": {
-        "VOXER_ACTIVE_LOG_LEVEL": "Info"
+        "VOXER_ACTIVE_LOG_LEVEL": "Info",
+        "VOXER_ENABLE_CLI": true
       },
       "errors": {
         "dev": true,

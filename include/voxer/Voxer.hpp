@@ -53,8 +53,8 @@ public:
     [[nodiscard]] bool
     configure(const std::filesystem::path& modelPath,
               const std::filesystem::path& filesPath,
-              bool useCuda,
-              SpeakerId speakerId);
+              bool useCuda = false,
+              SpeakerId speakerId = SpeakerId::Default);
 
     /**
      * Clean-up allocated resources.
