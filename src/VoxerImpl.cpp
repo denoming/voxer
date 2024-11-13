@@ -75,7 +75,10 @@ VoxerImpl::configure(const fs::path& modelPath, const bool useCuda, const Speake
 
     assert(filesDir);
     if (isDirExists(*filesDir)) {
-        configure(modelPath, *filesDir, useCuda, speakerId);
+        if (not configure(modelPath, *filesDir, useCuda, speakerId)) {
+            SPDLOG_ERROR("Error on configure");
+            return false;
+        }
         return true;
     }
 
@@ -89,7 +92,7 @@ VoxerImpl::configure(const fs::path& modelPath,
                      SpeakerId speakerId)
 {
     if (not SynthesizerEngine::setup(filesPath)) {
-        SPDLOG_ERROR("Error to setup synthesizer");
+        SPDLOG_ERROR("Error on setup synthesizer");
         return false;
     }
 
@@ -105,7 +108,7 @@ VoxerImpl::cleanup()
     _model.reset();
     _synthesizer.reset();
 
-    if(not SynthesizerEngine::cleanup()) {
+    if (not SynthesizerEngine::cleanup()) {
         SPDLOG_ERROR("Error to cleanup synthesizer");
     }
 }
@@ -114,6 +117,23 @@ SynthesisResult
 VoxerImpl::textToAudio(std::string text, DataHandler& handler)
 {
     return _synthesizer->synthesize(std::move(text), handler);
+}
+
+std::string
+VoxerImpl::info() const
+{
+    const SynthesisConfig& sconfig = _model->synthesisConfig();
+    std::stringstream ss;
+    ss << fmt::format("{:>15} : {:<}\n", "Sample Rate", sconfig.sampleRate);
+    ss << fmt::format("{:>15} : {:<} bits\n", "Sample Width", sconfig.sampleRate * 8);
+    ss << fmt::format("{:>15} : {:<}\n", "Channels", sconfig.channels);
+    ss << fmt::format("{:>15} : {:<.3f}\n", "Noise Scale", sconfig.noiseScale);
+    ss << fmt::format("{:>15} : {:<.3f}\n", "Length Scale", sconfig.lengthScale);
+    ss << fmt::format("{:>15} : {:<.3f}", "NoiseW", sconfig.noiseW);
+    if (sconfig.speakerId) {
+        ss << fmt::format("{:>15} : {:<}", "Speaker Id", static_cast<int>(*sconfig.speakerId));
+    }
+    return ss.str();
 }
 
 } // namespace jar

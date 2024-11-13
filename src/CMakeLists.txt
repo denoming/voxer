@@ -47,11 +47,12 @@ target_sources(voxer
 
 target_include_directories(voxer
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-           $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+           $<BUILD_INTERFACE:${VOXER_STAGE_DIR}>
 )
 
 target_link_libraries(voxer
-        PRIVATE fmt::fmt
+        PRIVATE Voxer::Version
+                fmt::fmt
                 spdlog::spdlog
                 nlohmann_json::nlohmann_json
                 utf8cpp::utf8cpp

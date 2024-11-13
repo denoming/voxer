@@ -31,7 +31,9 @@ static struct {
     OutputType outputType{OutputType::ToFile};
     bool cuda{false};
     bool json{false};
-    SpeakerId speaker{jar::SpeakerId::Default};
+    bool showInfo{false};
+    bool showVersion{false};
+    SpeakerId speaker{SpeakerId::Default};
 } config;
 
 [[nodiscard]] static bool
@@ -82,6 +84,14 @@ parseArgs(const cxxopts::ParseResult& result)
         config.speaker = static_cast<SpeakerId>(result["speaker"].as<int>());
     }
 
+    if (result.count("version")) {
+        config.showVersion = true;
+    }
+
+    if (result.count("info")) {
+        config.showInfo = true;
+    }
+
     return true;
 }
 
@@ -94,10 +104,14 @@ generateFileName()
 }
 
 [[nodiscard]] static bool
-handleInput(std::istream& is)
+handleArgs(std::istream& is, std::ostream& os)
 {
-    Voxer voxer;
+    if (config.showVersion) {
+        os << Voxer::version() << std::endl;
+        return true;
+    }
 
+    Voxer voxer;
     if (config.model and config.files) {
         if (not voxer.configure(*config.model, *config.files, config.cuda, config.speaker)) {
             return false;
@@ -110,6 +124,11 @@ handleInput(std::istream& is)
         if (not voxer.configure(config.cuda, config.speaker)) {
             return false;
         }
+    }
+
+    if (config.showInfo) {
+        os << voxer.info() << std::endl;
+        return false;
     }
 
     std::string input;
@@ -170,6 +189,7 @@ main(const int argc, char* argv[])
         ("c,cuda", "Use CUDA")
         ("s,speaker", "Speaker id (default: 0)", cxxopts::value<int>()->default_value("0"))
         ("v,version", "Print version")
+        ("i,info", "Print information")
         ("q,quiet", "Disable logging")
         ("h,help", "Print usage")
     ;
@@ -184,7 +204,7 @@ main(const int argc, char* argv[])
         if (not parseArgs(result)) {
             return EXIT_FAILURE;
         }
-        if (not handleInput(std::cin)) {
+        if (not handleArgs(std::cin, std::cout)) {
             return EXIT_FAILURE;
         }
     } catch (const std::exception& e) {

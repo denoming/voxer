@@ -4,12 +4,21 @@
 // Denys Asauliak, denoming@gmail.com
 
 #include "voxer/Voxer.hpp"
+#include "voxer/Version.hpp"
 
 #include "VoxerImpl.hpp"
+
+#include <fmt/format.h>
 
 namespace fs = std::filesystem;
 
 namespace jar {
+
+[[nodiscard]] std::string
+Voxer::version()
+{
+    return fmt::format("Voxer {} ({})", getVersion(), getVersionRevision());
+}
 
 Voxer::Voxer()
     : _impl{new VoxerImpl}
@@ -49,6 +58,12 @@ SynthesisResult
 Voxer::textToAudio(std::string text, DataHandler& handler)
 {
     return _impl->textToAudio(std::move(text), handler);
+}
+
+std::string
+Voxer::info() const
+{
+    return _impl->info();
 }
 
 } // namespace jar

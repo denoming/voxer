@@ -71,6 +71,21 @@ public:
     SynthesisResult
     textToAudio(std::string text, DataHandler& handler);
 
+    /**
+     * Returns model synthesis config information.
+     * @return the string with information
+     */
+    [[nodiscard]] std::string
+    info() const;
+
+public:
+    /**
+     * Return the application version
+     * @return the string with version
+     */
+    [[nodiscard]] static std::string
+    version();
+
 private:
     std::unique_ptr<class VoxerImpl> _impl;
 };

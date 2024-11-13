@@ -1,0 +1,37 @@
+#include "voxer/Version.hpp"
+
+std::string_view
+getVersion()
+{
+    return "@voxer_VERSION@";
+}
+
+unsigned
+getVersionMajor()
+{
+    return @voxer_VERSION_MAJOR@;
+}
+
+unsigned
+getVersionMinor()
+{
+    return @voxer_VERSION_MINOR@ +0;
+}
+
+unsigned
+getVersionPatch()
+{
+    return @voxer_VERSION_PATCH@ +0;
+}
+
+unsigned
+getVersionTweak()
+{
+    return @voxer_VERSION_TWEAK@ +0;
+}
+
+std::string_view
+getVersionRevision()
+{
+    return "@voxer_GIT_HASH@";
+}

@@ -21,15 +21,15 @@ class VoxerImpl {
 public:
     VoxerImpl() = default;
 
-    bool
+    [[nodiscard]] bool
     configure(bool useCuda = false, SpeakerId speakerId = SpeakerId::Default);
 
-    bool
+    [[nodiscard]] bool
     configure(const std::filesystem::path& modelPath,
               bool useCuda = false,
               SpeakerId speakerId = SpeakerId::Default);
 
-    bool
+    [[nodiscard]] bool
     configure(const std::filesystem::path& modelPath,
               const std::filesystem::path& filesPath,
               bool useCuda = false,
@@ -40,6 +40,9 @@ public:
 
     [[nodiscard]] SynthesisResult
     textToAudio(std::string text, DataHandler& handler);
+
+    [[nodiscard]] std::string
+    info() const;
 
 private:
     std::unique_ptr<Model> _model;
