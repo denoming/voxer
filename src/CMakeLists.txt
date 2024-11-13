@@ -42,6 +42,7 @@ target_sources(voxer
         SynthesizerEngine.cpp
         PhonemesMatcher.cpp
         DataHandler.cpp
+        DataSaver.cpp
         TextTranslator.cpp
 )
 

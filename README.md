@@ -101,3 +101,47 @@ $ cmake --install <build-dir> --prefix <destination-path>/voxer
 
 * Add `voxer` dependency into project `vcpkg.json` file
 * Download `*.onnx` and `*.onnx.json` model files (see [VOICES.md](VOICES.md) file)
+
+### By CLI tool
+
+Define input parameters:
+```shell
+export MODEL="<model>.onnx"
+export FILES="/usr/share/espeak-ng-data"
+export INPUT="Hello World"
+```
+
+Display version:
+```shell
+$ voxer-cli -v
+Voxer 0.2.2 (447a7fb9)
+```
+
+Display information:
+```shell
+$ voxer-cli --model $MODEL --files $FILES --info
+```
+
+Save into WAV file:
+```shell
+$ echo $INPUT | voxer-cli --model $MODEL --files $FILES --output-file welcome.wav --wav
+```
+
+Save into RAW file:
+```shell
+$ echo $INPUT | voxer-cli --model $MODEL --files $FILES --output-file welcome.raw --raw
+```
+
+Play using gstreamer (WAV format):
+```shell
+$ echo $INPUT \
+ | voxer-cli --model $MODEL --files $FILES --wav --output-file -
+ | gst-launch-1.0 -e fdsrc fd=0 ! wavparse ! audioconvert ! audioresample ! autoaudiosink sync=false
+```
+
+Play using gstreamer (RAW format):
+```shell
+$ echo $INPUT \
+ | voxer-cli --model $MODEL --files $FILES --raw --output-file -
+ | gst-launch-1.0 -e fdsrc fd=0 ! rawaudioparse num-channels=1 sample-rate=22050 ! audioconvert ! audioresample ! autoaudiosink sync=false
+```

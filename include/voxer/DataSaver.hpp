@@ -8,16 +8,16 @@
 #include "voxer/VoxerExport.hpp"
 #include "voxer/DataHandler.hpp"
 
-#include <filesystem>
 #include <memory>
+#include <filesystem>
 
 namespace jar {
 
-class VOXER_EXPORT FormattedDataSaver final : public DataHandler {
+class VOXER_EXPORT DataSaver final : public DataHandler {
 public:
-    explicit FormattedDataSaver(DataFormat format, std::filesystem::path outputFile);
+    explicit DataSaver(std::filesystem::path outputFile);
 
-    ~FormattedDataSaver() override;
+    ~DataSaver() override;
 
 private:
     void

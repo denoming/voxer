@@ -18,7 +18,7 @@ public:
     onBegin(int sampleRate, int sampleWidth, int channels);
 
     virtual void
-    onData(const void* ptr, unsigned int count);
+    onData(const void* ptr, unsigned int size);
 
     virtual void
     onEnd(const SynthesisResult& result);

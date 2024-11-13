@@ -3,9 +3,11 @@
 // (c) Copyright 2024
 // Denys Asauliak, denoming@gmail.com
 
+#include "voxer/Options.hpp"
 #include "voxer/Voxer.hpp"
 #include "voxer/FormattedDataSaver.hpp"
 #include "FormattedDataOutputStream.hpp"
+#include "DataOutputStream.hpp"
 
 #include <cxxopts.hpp>
 #include <nlohmann/json.hpp>
@@ -15,6 +17,7 @@
 #include <optional>
 #include <filesystem>
 #include <chrono>
+#include <voxer/DataSaver.hpp>
 
 using namespace jar;
 using namespace nlohmann;
@@ -24,17 +27,50 @@ namespace krn = std::chrono;
 
 enum class OutputType { ToStdOut, ToFile, ToDir };
 
+enum class OutputFormat { Raw, Wav };
+
 static struct {
     std::optional<fs::path> model;
     std::optional<fs::path> files;
     fs::path outputPath;
     OutputType outputType{OutputType::ToFile};
+    OutputFormat outputFormat{OutputFormat::Raw};
     bool cuda{false};
     bool json{false};
     bool showInfo{false};
     bool showVersion{false};
     SpeakerId speaker{SpeakerId::Default};
 } config;
+
+[[nodiscard]] static fs::path
+getFileName()
+{
+    const auto now = krn::system_clock::now();
+    const auto timestamp = krn::duration_cast<krn::nanoseconds>(now.time_since_epoch());
+    return fmt::format(fmt::runtime("{:%Q}.wav"), timestamp);
+}
+
+[[nodiscard]] std::unique_ptr<DataHandler>
+getDataHandler(std::ostream& os)
+{
+#ifdef VOXER_ENABLE_FORMATTED
+    if (config.outputFormat == OutputFormat::Wav) {
+        return std::make_unique<FormattedDataOutputStream>(DataFormat::Wav, os);
+    }
+#endif
+    return std::make_unique<DataOutputStream>(os);
+}
+
+[[nodiscard]] std::unique_ptr<DataHandler>
+getDataHandler(const fs::path& outputFile)
+{
+#ifdef VOXER_ENABLE_FORMATTED
+    if (config.outputFormat == OutputFormat::Wav) {
+        return std::make_unique<FormattedDataSaver>(DataFormat::Wav, outputFile);
+    }
+#endif
+    return std::make_unique<DataSaver>(outputFile);
+}
 
 [[nodiscard]] static bool
 parseArgs(const cxxopts::ParseResult& result)
@@ -80,6 +116,16 @@ parseArgs(const cxxopts::ParseResult& result)
         config.json = result["json"].as<bool>();
     }
 
+    if (result.count("raw")) {
+        config.outputFormat = OutputFormat::Raw;
+    }
+
+#ifdef VOXER_ENABLE_FORMATTED
+    if (result.count("wav")) {
+        config.outputFormat = OutputFormat::Wav;
+    }
+#endif
+
     if (result.count("speaker")) {
         config.speaker = static_cast<SpeakerId>(result["speaker"].as<int>());
     }
@@ -93,14 +139,6 @@ parseArgs(const cxxopts::ParseResult& result)
     }
 
     return true;
-}
-
-[[nodiscard]] static fs::path
-generateFileName()
-{
-    const auto now = krn::system_clock::now();
-    const auto timestamp = krn::duration_cast<krn::nanoseconds>(now.time_since_epoch());
-    return fmt::format(fmt::runtime("{:%Q}.wav"), timestamp);
 }
 
 [[nodiscard]] static bool
@@ -145,14 +183,14 @@ handleArgs(std::istream& is, std::ostream& os)
             }
         }
         if (config.outputType == OutputType::ToStdOut) {
-            FormattedDataOutputStream handler{DataFormat::Wav, std::cout};
-            voxer.textToAudio(input, handler);
+            auto handler = getDataHandler(os);
+            voxer.textToAudio(input, *handler);
             continue;
         }
         if (config.outputType == OutputType::ToDir) {
-            const fs::path filePath = config.outputPath / generateFileName();
-            FormattedDataSaver handler{DataFormat::Wav, filePath};
-            voxer.textToAudio(input, handler);
+            fs::path filePath = config.outputPath / getFileName();
+            auto handler = getDataHandler(filePath);
+            voxer.textToAudio(input, *handler);
             continue;
         }
         if (config.outputType == OutputType::ToFile) {
@@ -164,8 +202,8 @@ handleArgs(std::istream& is, std::ostream& os)
                 }
                 input = ss.str();
             }
-            FormattedDataSaver handler{DataFormat::Wav, config.outputPath};
-            voxer.textToAudio(input, handler);
+            auto handler = getDataHandler(config.outputPath);
+            voxer.textToAudio(input, *handler);
             continue;
         }
         throw std::runtime_error("Unhandled output type");
@@ -185,14 +223,17 @@ main(const int argc, char* argv[])
         ("f,files", "Path to eSpeak data files", cxxopts::value<std::string>())
         ("of,output-file", "Path to output file ('-' output to STDOUT)", cxxopts::value<std::string>()->default_value("-"))
         ("od,output-dir", "Path to output dir (default: current working dir)", cxxopts::value<std::string>())
-        ("j,json", "Interpret input in JSON format")
+        ("j,json", "Handle input in JSON format")
+        ("r,raw", "Print output in RAW format (default)", cxxopts::value<bool>())
+#ifdef VOXER_ENABLE_FORMATTED
+        ("w,wav", "Print output in WAV format", cxxopts::value<bool>())
+#endif
         ("c,cuda", "Use CUDA")
         ("s,speaker", "Speaker id (default: 0)", cxxopts::value<int>()->default_value("0"))
         ("v,version", "Print version")
         ("i,info", "Print information")
         ("q,quiet", "Disable logging")
-        ("h,help", "Print usage")
-    ;
+        ("h,help", "Print usage");
     // clang-format on
 
     try {

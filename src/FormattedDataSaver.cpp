@@ -50,9 +50,9 @@ public:
     }
 
     void
-    write(const void* ptr, const unsigned int count)
+    write(const void* ptr, const unsigned int size)
     {
-        _handle.write(static_cast<const short*>(ptr), count);
+        _handle.write(static_cast<const short*>(ptr), size);
     }
 
     void
@@ -83,9 +83,9 @@ FormattedDataSaver::onBegin(const int sampleRate, const int sampleWidth, const i
 }
 
 void
-FormattedDataSaver::onData(const void* ptr, const unsigned int count)
+FormattedDataSaver::onData(const void* ptr, const unsigned int size)
 {
-    _impl->write(ptr, count);
+    _impl->write(ptr, size);
 }
 
 void

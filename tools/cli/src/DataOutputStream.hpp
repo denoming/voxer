@@ -5,21 +5,16 @@
 
 #pragma once
 
-#include "voxer/VoxerExport.hpp"
 #include "voxer/DataHandler.hpp"
 
-#include <filesystem>
-#include <memory>
+#include <ostream>
 
 namespace jar {
 
-class VOXER_EXPORT FormattedDataSaver final : public DataHandler {
+class DataOutputStream final : public DataHandler {
 public:
-    explicit FormattedDataSaver(DataFormat format, std::filesystem::path outputFile);
+    explicit DataOutputStream(std::ostream& os);
 
-    ~FormattedDataSaver() override;
-
-private:
     void
     onBegin(int sampleRate, int sampleWidth, int channels) override;
 
@@ -30,8 +25,7 @@ private:
     onEnd(const SynthesisResult& result) override;
 
 private:
-    class Impl;
-    std::unique_ptr<Impl> _impl;
+    std::ostream& _os;
 };
 
 } // namespace jar

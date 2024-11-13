@@ -19,9 +19,9 @@ DataHandler::onBegin(int sampleRate, int sampleSize, int channels)
 }
 
 void
-DataHandler::onData(const void* ptr, unsigned int count)
+DataHandler::onData(const void* ptr, unsigned int size)
 {
-    SPDLOG_DEBUG("onData(buffer<ptr: {}, count: {}>)", fmt::ptr(ptr), count);
+    SPDLOG_DEBUG("onData(buffer<ptr: {}, size: {}>)", fmt::ptr(ptr), size);
 }
 
 void
