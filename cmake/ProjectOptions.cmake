@@ -5,7 +5,7 @@
 
 include(FeatureSummary)
 
-option(VOXER_ENABLE_TESTS "Enable unit tests" ON)
+option(VOXER_ENABLE_TESTS "Enable unit tests" OFF)
 if(VOXER_ENABLE_TESTS)
     list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 endif()
