@@ -6,6 +6,7 @@ FROM $PLATFORM/debian:bookworm
 ARG USER_NAME=bender
 ARG USER_UID=1000
 ARG USER_GID=1000
+ARG ONNX_URL
 
 ENV VCPKG_ROOT="/home/$USER_NAME/.vcpkg"
 ENV VCPKG_FORCE_SYSTEM_BINARIES=true
@@ -26,13 +27,14 @@ RUN groupadd -f -g $USER_GID $USER_NAME \
  && echo $USER_NAME 'ALL=(ALL) NOPASSWD:SETENV: ALL' > /etc/sudoers.d/010_$USER_NAME || true
 
 # Install ONNX Runtime Library
-RUN wget -qO- https://github.com/microsoft/onnxruntime/releases/download/v1.19.2/onnxruntime-linux-aarch64-1.19.2.tgz | tar xz -C /tmp \
- && cd /tmp/onnxruntime-linux-aarch64-1.19.2 \
+RUN mkdir /tmp/onnx \
+ && wget -qO- $ONNX_URL | tar xz -C /tmp/onnx --strip-components=1 \
+ && cd /tmp/onnx \
  && mkdir -p /usr/local/include/onnxruntime \
  && cp -pr include/* /usr/local/include/onnxruntime \
  && cp -pr lib/* /usr/local/lib \
  && cd $HOME \
- && rm -fr /tmp/onnxruntime-linux-aarch64-1.19.2*
+ && rm -rf /tmp/onnx
 
 USER $USER_NAME
 

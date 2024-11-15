@@ -8,8 +8,10 @@ PROJECT_ROOT=$(dirname "$(dirname "$(realpath -s $0)")")
 PLATFORM_ARCH="${1:-arm64}"
 PLATFORM_VARIANT="${2:-v8}"
 USER_NAME="${3:-$(whoami)}"
+ONNX_VERSION="${4:-1.19.2}"
 
 # Define variables
+ONNX_URL="https://github.com/microsoft/onnxruntime/releases/download/v${ONNX_VERSION}/onnxruntime-linux-aarch64-${ONNX_VERSION}.tgz"
 USER_UID="$(id ${USERNAME} -u)"
 USER_GID="$(id ${USERNAME} -g)"
 PLATFORM="${PLATFORM_ARCH}${PLATFORM_VARIANT}"
@@ -38,6 +40,7 @@ build_image() {
   --build-arg "USER_NAME=${USER_NAME}" \
   --build-arg "USER_UID=${USER_UID}" \
   --build-arg "USER_GID=${USER_GID}" \
+  --build-arg "ONNX_URL=${ONNX_URL}" \
   --file "${PROJECT_ROOT}/Dockerfile"
   "${PROJECT_ROOT}")
 
