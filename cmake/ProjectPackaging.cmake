@@ -11,8 +11,8 @@ set(CPACK_PACKAGE_VENDOR "DENOMING")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Voxer Project")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
 set(CPACK_COMPONENTS_ALL
-    Voxer_Runtime
-    Voxer_Development
+    Voxer_Lib
+    Voxer_DevLib
 )
 set(CPACK_COMPONENTS_GROUPING ONE_PER_GROUP)
 set(CPACK_VERBATIM_VARIABLES YES)
@@ -50,16 +50,16 @@ else()
     include(tgzFormat)
 endif()
 
-cpack_add_component(Voxer_Runtime
+cpack_add_component(Voxer_Lib
     DISPLAY_NAME Runtime
     DESCRIPTION "Voxer runtime library"
     REQUIRED
 )
 
-cpack_add_component(Voxer_Development
+cpack_add_component(Voxer_DevLib
     DISPLAY_NAME Development
     DESCRIPTION "Voxer develop library"
-    DEPENDS Voxer_Runtime
+    DEPENDS Voxer_Lib
     REQUIRED
 )
 
@@ -68,7 +68,17 @@ if(VOXER_VOICES_DOWNLOAD)
     cpack_add_component(Voxer_Data
         DISPLAY_NAME Data
         DESCRIPTION "Voxer data files"
-        DEPENDS Voxer_Runtime
+        DEPENDS Voxer_Lib
+        REQUIRED
+    )
+endif()
+
+if(CPACK_COMPONENTS_ALL)
+    list(APPEND CPACK_COMPONENTS_ALL Voxer_Bin)
+    cpack_add_component(Voxer_Bin
+        DISPLAY_NAME Binaries
+        DESCRIPTION "Voxer bin files"
+        DEPENDS Voxer_Bin
         REQUIRED
     )
 endif()

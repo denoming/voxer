@@ -85,14 +85,14 @@ install(TARGETS voxer
     EXPORT VoxerTargets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        COMPONENT Voxer_Runtime
-        NAMELINK_COMPONENT Voxer_Development
+        COMPONENT Voxer_Lib
+        NAMELINK_COMPONENT Voxer_DevLib
     FILE_SET HEADERS
 )
 
 install(TARGETS voxer
     FILE_SET HEADERS
-    COMPONENT Voxer_Development
+    COMPONENT Voxer_DevLib
     INCLUDES
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
@@ -100,6 +100,6 @@ install(TARGETS voxer
 install(EXPORT VoxerTargets
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/voxer
         NAMESPACE Voxer::
-        COMPONENT Voxer_Development
+        COMPONENT Voxer_DevLib
         FILE VoxerTargets.cmake
 )

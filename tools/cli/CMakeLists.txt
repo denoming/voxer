@@ -27,5 +27,5 @@ target_compile_features(${TARGET} PRIVATE cxx_std_23)
 
 install(
     TARGETS ${TARGET}
-    COMPONENT Voxer_Runtime
+    COMPONENT Voxer_Bin
 )

@@ -1,13 +1,16 @@
 include_guard()
 
+set(VOXER_VOICES_LIST
+    "en_US+amy+medium;uk_UA+lada+x_low"
+    CACHE STRING "The list voices to download by default")
 set(VOXER_VOICES_LIST_DIR
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/voices"
+    "${VOXER_STAGE_DIR}/voxer/voices"
     CACHE STRING "Base dir of voices")
 set(VOXER_VOICES_MODEL_BASE_URL
     "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/<lang-code>/<lang>/<name>/<quality>/<lang>-<name>-<quality>.onnx?download=true"
     CACHE STRING "The base URL to download model")
 set(VOXER_VOICES_CONFIG_BASE_URL
-    "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/<lang-code>/<lang>/<name>/<quality>/<lang>-<name>-<quality>.onnx.json?download=true.json"
+    "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/<lang-code>/<lang>/<name>/<quality>/<lang>-<name>-<quality>.onnx.json?download=true"
     CACHE STRING "The base URL to download config")
 
 function(CreateUrl baseUrl lang name quality url)
@@ -38,7 +41,7 @@ function(DownloadVoice lang name quality)
     file(DOWNLOAD
         "${modelUrl}" "${modelOutputFile}" SHOW_PROGRESS)
     file(DOWNLOAD
-        "${configOutputFile}" "${configOutputFile}" SHOW_PROGRESS)
+        "${configUrl}" "${configOutputFile}" SHOW_PROGRESS)
 endfunction()
 
 function(DownloadVoices downloadVoices)
@@ -50,7 +53,7 @@ function(DownloadVoices downloadVoices)
         list(POP_FRONT attrs attr2)
         list(POP_FRONT attrs attr3)
         if(attr1)
-            list(FIND downloadVoices "${attr1}+${attr2}" index)
+            list(FIND downloadVoices "${attr1}+${attr2}+${attr3}" index)
             if(NOT index EQUAL -1)
                 DownloadVoice(${attr1} ${attr2} ${attr3})
             endif()
@@ -61,12 +64,12 @@ endfunction()
 if(NOT VOXER_VOICES_LIST_PROCESSED)
     DownloadVoices("${VOXER_VOICES_LIST}")
     set(VOXER_VOICES_LIST_PROCESSED ON
-        CACHE BOOL "Indicator whether voices are downloaded")
+        CACHE BOOL "Indicator whether voices are downloaded" FORCE)
 endif()
 
 include(GNUInstallDirs)
 install(
     DIRECTORY "${VOXER_VOICES_LIST_DIR}"
-    TYPE DATA
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/voxer
     COMPONENT Voxer_Data
 )
