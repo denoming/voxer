@@ -6,11 +6,14 @@
 
 Available CMake options:
 
-| Option                   | Default Value | Description                         |
-|--------------------------|:-------------:|-------------------------------------|
-| `VOXER_ENABLE_TESTS`     |      ON       | Enable unit tests                   |
-| `VOXER_ENABLE_FORMATTED` |      ON       | Enable formatted audio data support |
-| `VOXER_VOICES_DOWNLOAD`  |      OFF      | Enable voices downloading           |
+| Option                   | Default |  Type   | Description                         |
+|--------------------------|:-------:|:-------:|-------------------------------------|
+| `VOXER_ENABLE_TESTS`     |   OFF   | Boolean | Enable unit tests                   |
+| `VOXER_ENABLE_FORMATTED` |   ON    | Boolean | Enable formatted audio data support |
+| `VOXER_VOICES_DOWNLOAD`  |   OFF   | Boolean | Enable voices downloading           |
+| `VOXER_VOICES_LIST`      |    -    |  List   | The list of voices to download      |
+
+See the list of available voices to download at `config/voices/voices.csv` file.
 
 ## Configuration
 
@@ -31,9 +34,10 @@ Available environment variables:
 Build artifacts default location is `<build-dir>/stage`.
 
 The available packages:
- * [libvoxer_0.2.1_.deb](build-debug/libvoxer_0.2.1_.deb)
- * [libvoxer-dev_0.2.1_.deb](build-debug/libvoxer-dev_0.2.1_.deb)
- * (optional) [libvoxer-data_0.2.1_.deb](build-debug/libvoxer-data_0.2.1_.deb)
+
+* [libvoxer_0.2.1_.deb](build-debug/libvoxer_0.2.1_.deb)
+* [libvoxer-dev_0.2.1_.deb](build-debug/libvoxer-dev_0.2.1_.deb)
+* (optional) [libvoxer-data_0.2.1_.deb](build-debug/libvoxer-data_0.2.1_.deb)
 
 ### Locally
 
@@ -105,6 +109,7 @@ $ cmake --install <build-dir> --prefix <destination-path>/voxer
 ### By CLI tool
 
 Define input parameters:
+
 ```shell
 export MODEL="<model>.onnx"
 export FILES="/usr/share/espeak-ng-data"
@@ -112,36 +117,42 @@ export INPUT="Hello World"
 ```
 
 Display version:
+
 ```shell
 $ voxer-cli -v
 Voxer 0.2.2 (447a7fb9)
 ```
 
 Display information:
+
 ```shell
 $ voxer-cli --model $MODEL --files $FILES --info
 ```
 
 Save into WAV file:
+
 ```shell
 $ echo $INPUT | voxer-cli --model $MODEL --files $FILES --output-file welcome.wav --wav
 ```
 
 Save into RAW file:
+
 ```shell
 $ echo $INPUT | voxer-cli --model $MODEL --files $FILES --output-file welcome.raw --raw
 ```
 
 Play using gstreamer (WAV format):
+
 ```shell
 $ echo $INPUT \
- | voxer-cli --model $MODEL --files $FILES --wav --output-file -
+ | voxer-cli --model $MODEL --files $FILES --wav --output-file - \
  | gst-launch-1.0 -e fdsrc fd=0 ! wavparse ! audioconvert ! audioresample ! autoaudiosink sync=false
 ```
 
 Play using gstreamer (RAW format):
+
 ```shell
 $ echo $INPUT \
- | voxer-cli --model $MODEL --files $FILES --raw --output-file -
+ | voxer-cli --model $MODEL --files $FILES --raw --output-file - \
  | gst-launch-1.0 -e fdsrc fd=0 ! rawaudioparse num-channels=1 sample-rate=22050 ! audioconvert ! audioresample ! autoaudiosink sync=false
 ```
