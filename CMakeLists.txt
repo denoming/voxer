@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.25.1)
 
 include(cmake/ProjectOptions.cmake)
 
-project(voxer VERSION 0.2.2
+project(voxer VERSION 0.2.3
               HOMEPAGE_URL "https://www.denoming.com")
 
 include(cmake/ProjectConfigs.cmake)
