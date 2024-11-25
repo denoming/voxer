@@ -12,7 +12,6 @@
   "configurePresets": [
     {
       "name": "debug",
-      "hidden": false,
       "inherits": ["dc-debug-vcpkg"],
       "binaryDir": "build-debug",
       "displayName": "Debug",
@@ -31,7 +30,6 @@
     },
     {
       "name": "release",
-      "hidden": false,
       "inherits": ["dc-release-vcpkg"],
       "binaryDir": "build-release",
       "displayName": "Release",
