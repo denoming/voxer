@@ -12,7 +12,10 @@ set(CPACK_DEBIAN_VOXER_LIB_FILE_NAME DEB-DEFAULT)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     set(CPACK_DEBIAN_VOXER_LIB_DEBUGINFO_PACKAGE ON)
 endif()
-set(CPACK_DEBIAN_VOXER_LIB_PACKAGE_DEPENDS "espeak-ng (>= 1.51+dfsg), espeak-ng-data (>= 1.51+dfsg)")
+string(CONCAT CPACK_DEBIAN_VOXER_LIB_PACKAGE_DEPENDS
+    "espeak-ng (>= 1.51+dfsg), "
+    "espeak-ng-data (>= 1.51+dfsg)"
+)
 if(VOXER_VOICES_DOWNLOAD)
     set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libvoxer-data")
 endif()
