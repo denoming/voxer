@@ -3,12 +3,12 @@
 # (c) Copyright 2024
 # Denys Asauliak, denoming@gmail.com
 
-if(CMAKE_VERSION VERSION_LESS 3.28)
-    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Voxer requires CMake 3.28 or later")
+if(CMAKE_VERSION VERSION_LESS 3.25.1)
+    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Voxer requires CMake 3.25.1 or later")
     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
     return()
 endif()
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.25.1)
 
 @PACKAGE_INIT@
 
