@@ -1,9 +1,7 @@
 include(CPackComponent)
 
 # Set default packaging install prefix path
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-endif()
+set(CPACK_PACKAGING_INSTALL_PREFIX "/")
 
 set(CPACK_PACKAGE_NAME "voxer")
 set(CPACK_PACKAGE_CONTACT "maintainer@denoming.com")
@@ -40,14 +38,13 @@ if (EXISTS "${PROJECT_SOURCE_DIR}/README.md")
     set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/config/generators")
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CPACK_GENERATOR "TGZ;DEB")
-    include(tgzFormat)
-    include(debFormat)
+    include(cmake/generators/deb.cmake)
+    include(cmake/generators/tgz.cmake)
 else()
     set(CPACK_GENERATOR "TGZ")
-    include(tgzFormat)
+    include(cmake/generators/tgz.cmake)
 endif()
 
 cpack_add_component(Voxer_Lib
