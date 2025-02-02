@@ -1,5 +1,52 @@
 # Voxer
 
+Dependencies:
+* espeak-ng (library, headers and data files)
+* (vcpkg) fmt
+* (vcpkg) spdlog
+* (vcpkg) nlohmann-json
+* (vcpkg) utfcpp
+* (vcpkg) uni-algo
+
+Options dependencies (formatted, `VOXER_ENABLE_FORMATTED` cmake option):
+* (vcpkg) libsndfile
+
+Options dependencies (CLI enabled, `VOXER_ENABLE_CLI` cmake option):
+* (vcpkg) cxxopts
+
+## Prerequisites
+
+Install espeak-ng:
+```shell
+$ sudo apt install libespeak-ng-dev espeak-ng-data 
+```
+
+Install ONNX (GPU):
+```shell
+$ export DEST_DIR=$HOME/.local
+$ wget https://github.com/microsoft/onnxruntime/releases/download/v1.20.1/onnxruntime-linux-x64-gpu-1.20.1.tgz
+$ tar xf onnxruntime-linux-x64-gpu-1.20.1.tgz -C /tmp
+$ pushd /tmp/onnxruntime-linux-x64-gpu-1.20.1
+$ mkdir -p $DEST_DIR/{include/onnxruntime,lib}
+$ cp -r include/* $DEST_DIR/include/onnxruntime
+$ cp -r lib/* $DEST_DIR/lib
+$ popd
+$ rm -f onnxruntime-linux-x64-gpu-1.20.1.tgz
+```
+
+Install ONNX (CPU, mutually exclusive with GPU variant, see above):
+```shell
+$ export DEST_DIR=$HOME/.local
+$ wget https://github.com/microsoft/onnxruntime/releases/download/v1.20.1/onnxruntime-linux-x64-1.20.1.tgz
+$ tar xf onnxruntime-linux-x64-1.20.1.tgz -C /tmp
+$ pushd /tmp/onnxruntime-linux-x64-1.20.1
+$ mkdir -p $DEST_DIR/{include/onnxruntime,lib}
+$ cp -r include/* $DEST_DIR/include/onnxruntime
+$ cp -r lib/* $DEST_DIR/lib
+$ popd
+$ rm -f onnxruntime-linux-x64-1.20.1.tgz
+````
+
 ## Introduction
 
 **Voxer** is a tiny text to speech C++ library.
@@ -18,49 +65,43 @@ See the list of available voices to download at `config/voices/voices.csv` file.
 ## Configuration
 
 To configure library you need to specify:
+* path to `*.onnx and *.onnx.json` voice model files
+* path to `espeak-ng` data files
 
-* path to `*.onnx and *.onnx.json` files
-* path to `espeak-ng` files
+Available environment variables to set paths:
 
-Available environment variables:
-
-| Variable          | Description                                           |
-|-------------------|-------------------------------------------------------|
-| `VOXER_MODEL_DIR` | The path to voice model file (*.onnx and *.onnx.json) |
-| `VOXER_FILES_DIR` | The path to eSpeak-Ng data files                      |
+| Variable          | Description                                            |
+|-------------------|--------------------------------------------------------|
+| `VOXER_MODEL_DIR` | The path to voice model files (*.onnx and *.onnx.json) |
+| `VOXER_FILES_DIR` | The path to eSpeak-Ng data files                       |
 
 ## Building
 
-Build artifacts default location is `<build-dir>/stage`.
+Output artifacts default location is `<build-dir>/stage`.
 
-The available packages:
-
-* [libvoxer_0.2.1_.deb](build-debug/libvoxer_0.2.1_.deb)
-* [libvoxer-dev_0.2.1_.deb](build-debug/libvoxer-dev_0.2.1_.deb)
-* (optional) [libvoxer-data_0.2.1_.deb](build-debug/libvoxer-data_0.2.1_.deb)
+Output artifacts includes the following packages:
+* `libvoxer_<version>_.deb`
+* libvoxer-dev_<version>_.deb
+* (optional) libvoxer-data_<version>_.deb
 
 ### Locally
 
 Build debug artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset debug
 ```
 
 Build release artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset release
 ```
 
 Build and packing debug artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset debug-and-pack
 ```
 
 Build and packing release artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset release-and-pack
 ```
@@ -68,25 +109,21 @@ $ cmake --workflow --fresh --preset release-and-pack
 ### By Docker
 
 Build debug artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset debug-docker
 ```
 
 Build release artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset release-docker
 ```
 
 Build and packing debug artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset debug-and-pack-docker
 ```
 
 Build and packing release artifacts:
-
 ```shell
 $ cmake --workflow --fresh --preset release-and-pack-docker
 ```
@@ -94,7 +131,6 @@ $ cmake --workflow --fresh --preset release-and-pack-docker
 ## Installing
 
 Install artifacts to specific location:
-
 ```shell
 $ cmake --install <build-dir> --prefix <destination-path>/voxer
 ```
