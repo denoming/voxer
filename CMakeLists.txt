@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.25.1)
 
 include(cmake/ProjectOptions.cmake)
 
-project(voxer VERSION 0.2.3
+project(voxer VERSION 0.2.4
               HOMEPAGE_URL "Voxer Library")
 
 include(cmake/ProjectConfigs.cmake)
