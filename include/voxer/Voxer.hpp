@@ -23,8 +23,8 @@ public:
 
     /**
      * Configures library.\n
-     * Uses \p VOXER_MODEL_DIR env variable to retrieve path to model file.\n
-     * Uses \p VOXER_FILES_DIR env variable to retrieve path to files dir.
+     * Uses \p VOXER_MODEL_FILE env variable to retrieve path to model file.\n
+     * Uses \p VOXER_ESPEAK_DIR env variable to retrieve path to files dir.
      * @param useCuda the flag to use CUDA or not
      * @param speakerId the index of speaker to use (see *.onnx.json model config file)
      */
@@ -33,7 +33,7 @@ public:
 
     /**
      * Configures library.\n
-     * Uses \p VOXER_FILES_DIR env variable to retrieve path to files dir.
+     * Uses \p VOXER_ESPEAK_DIR env variable to retrieve path to files dir.
      * @param modelPath the path to model file (*.onnx file)
      * @param useCuda the flag to use CUDA or not
      * @param speakerId the index of speaker to use (see *.onnx.json model config file)

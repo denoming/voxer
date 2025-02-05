@@ -49,7 +49,7 @@ namespace jar {
 bool
 VoxerImpl::configure(const bool useCuda, const SpeakerId speakerId)
 {
-    const std::optional<fs::path> modelFile = getEnv("VOXER_MODEL_DIR");
+    const std::optional<fs::path> modelFile = getEnv("VOXER_MODEL_FILE");
     if (not modelFile) {
         SPDLOG_ERROR("Model file not set");
         return false;
@@ -67,7 +67,7 @@ VoxerImpl::configure(const bool useCuda, const SpeakerId speakerId)
 bool
 VoxerImpl::configure(const fs::path& modelPath, const bool useCuda, const SpeakerId speakerId)
 {
-    std::optional<fs::path> filesDir = getEnv("VOXER_FILES_DIR");
+    std::optional<fs::path> filesDir = getEnv("VOXER_ESPEAK_DIR");
     if (not filesDir) {
         SPDLOG_DEBUG("Use <{}> relative path with data files", kFilesDirName);
         filesDir = fs::current_path() / kFilesDirName;

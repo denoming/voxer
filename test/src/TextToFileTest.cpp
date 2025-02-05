@@ -20,8 +20,8 @@ using namespace testing;
 
 /**
  * Following env variables must be set:
- *  - VOXER_MODEL_DIR
- *  - VOXER_FILES_DIR
+ *  - VOXER_MODEL_FILE
+ *  - VOXER_ESPEAK_DIR
  **/
 TEST(TextToFileTest, SynthesizeTextWithSaving)
 {

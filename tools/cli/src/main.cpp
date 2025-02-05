@@ -81,7 +81,7 @@ parseArgs(const cxxopts::ParseResult& result)
             return false;
         }
     } else {
-        // Rely on VOXER_MODEL_DIR environment variable
+        // Rely on VOXER_MODEL_FILE environment variable
     }
 
     if (result.count("files")) {
@@ -90,7 +90,7 @@ parseArgs(const cxxopts::ParseResult& result)
             return false;
         }
     } else {
-        // Rely on VOXER_FILES_DIR environment variable
+        // Rely on VOXER_ESPEAK_DIR environment variable
     }
 
     if (result.count("output-file")) {

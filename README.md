@@ -1,6 +1,7 @@
 # Voxer
 
 Dependencies:
+
 * espeak-ng (library, headers and data files)
 * (vcpkg) fmt
 * (vcpkg) spdlog
@@ -9,19 +10,23 @@ Dependencies:
 * (vcpkg) uni-algo
 
 Options dependencies (formatted, `VOXER_ENABLE_FORMATTED` cmake option):
+
 * (vcpkg) libsndfile
 
 Options dependencies (CLI enabled, `VOXER_ENABLE_CLI` cmake option):
+
 * (vcpkg) cxxopts
 
 ## Prerequisites
 
 Install espeak-ng:
+
 ```shell
 $ sudo apt install libespeak-ng-dev espeak-ng-data 
 ```
 
 Install ONNX (GPU):
+
 ```shell
 $ export DEST_DIR=$HOME/.local
 $ wget https://github.com/microsoft/onnxruntime/releases/download/v1.20.1/onnxruntime-linux-x64-gpu-1.20.1.tgz
@@ -35,6 +40,7 @@ $ rm -f onnxruntime-linux-x64-gpu-1.20.1.tgz
 ```
 
 Install ONNX (CPU, mutually exclusive with GPU variant, see above):
+
 ```shell
 $ export DEST_DIR=$HOME/.local
 $ wget https://github.com/microsoft/onnxruntime/releases/download/v1.20.1/onnxruntime-linux-x64-1.20.1.tgz
@@ -51,86 +57,85 @@ $ rm -f onnxruntime-linux-x64-1.20.1.tgz
 
 **Voxer** is a tiny text to speech C++ library.
 
-Available CMake options:
-
-| Option                   | Default |  Type   | Description                         |
-|--------------------------|:-------:|:-------:|-------------------------------------|
-| `VOXER_ENABLE_TESTS`     |   OFF   | Boolean | Enable unit tests                   |
-| `VOXER_ENABLE_FORMATTED` |   ON    | Boolean | Enable formatted audio data support |
-| `VOXER_VOICES_DOWNLOAD`  |   OFF   | Boolean | Enable voices downloading           |
-| `VOXER_VOICES_LIST`      |    -    |  List   | The list of voices to download      |
+| Type  | Name                     | Stage   | Default |  Type   | Example                                         | Description                               |
+|-------|--------------------------|---------|:-------:|:-------:|-------------------------------------------------|-------------------------------------------|
+| cmake | `VOXER_ENABLE_TESTS`     | Build   |   OFF   | Boolean |                                                 | Enable unit tests                         |
+| cmake | `VOXER_ENABLE_FORMATTED` | Build   |   ON    | Boolean |                                                 | Enable formatted audio data support       |
+| env   | `VOXER_VOICES_DOWNLOAD`  | Build   |   OFF   | Boolean |                                                 | Enable voices downloading while building  |
+| env   | `VOXER_VOICES_LIST`      | Build   |    -    |  List   | "en_US+amy+medium;uk_UA+lada+x_low"             | Set the list of voices to download        |
+| env   | `VOXER_MODEL_FILE`       | Runtime |    -    | String  | "/usr/share/voxer/voices/en_US-amy-medium.onnx" | Set the path to voice model file (*.onnx) |
+| env   | `VOXER_ESPEAK_DIR`       | Runtime |    -    | String  | "/usr/lib/espeak-ng-data"                       | Set The path to eSpeak-Ng files           |
 
 See the list of available voices to download at `config/voices/voices.csv` file.
-
-## Configuration
-
-To configure library you need to specify:
-* path to `*.onnx and *.onnx.json` voice model files
-* path to `espeak-ng` data files
-
-Available environment variables to set paths:
-
-| Variable          | Description                                            |
-|-------------------|--------------------------------------------------------|
-| `VOXER_MODEL_DIR` | The path to voice model files (*.onnx and *.onnx.json) |
-| `VOXER_FILES_DIR` | The path to eSpeak-Ng data files                       |
 
 ## Building
 
 Output artifacts default location is `<build-dir>/stage`.
 
-Output artifacts includes the following packages:
+Packing artifacts includes the following files:
+
 * `libvoxer_<version>_.deb`
-* libvoxer-dev_<version>_.deb
-* (optional) libvoxer-data_<version>_.deb
+* `libvoxer-dev_<version>_.deb`
+* (optional) `libvoxer-data_<version>_.deb`
+
+Enable voice downloading:
+
+```shell
+export VOXER_VOICES_DOWNLOAD=1
+export VOXER_VOICES_LIST="en_US+amy+medium;uk_UA+lada+x_low"
+```
+
+Disable voice downloading:
+
+```shell
+unset VOXER_VOICES_DOWNLOAD
+unset VOXER_VOICES_LIST
+```
 
 ### Locally
 
-Build debug artifacts:
-```shell
-$ cmake --workflow --fresh --preset debug
-```
+Build (without voices downloading):
 
-Build release artifacts:
 ```shell
+# Debug
+$ cmake --workflow --fresh --preset debug
+# Release
 $ cmake --workflow --fresh --preset release
 ```
 
-Build and packing debug artifacts:
-```shell
-$ cmake --workflow --fresh --preset debug-and-pack
-```
+Build and packing (without voices downloading):
 
-Build and packing release artifacts:
 ```shell
+# Debug
+$ cmake --workflow --fresh --preset debug-and-pack
+# Release
 $ cmake --workflow --fresh --preset release-and-pack
 ```
 
 ### By Docker
 
-Build debug artifacts:
-```shell
-$ cmake --workflow --fresh --preset debug-docker
-```
+Build:
 
-Build release artifacts:
 ```shell
+# Debug
+$ cmake --workflow --fresh --preset debug-docker
+# Release
 $ cmake --workflow --fresh --preset release-docker
 ```
 
-Build and packing debug artifacts:
-```shell
-$ cmake --workflow --fresh --preset debug-and-pack-docker
-```
+Build and packing:
 
-Build and packing release artifacts:
 ```shell
+# Debug
+$ cmake --workflow --fresh --preset debug-and-pack-docker
+# Release
 $ cmake --workflow --fresh --preset release-and-pack-docker
 ```
 
 ## Installing
 
 Install artifacts to specific location:
+
 ```shell
 $ cmake --install <build-dir> --prefix <destination-path>/voxer
 ```
