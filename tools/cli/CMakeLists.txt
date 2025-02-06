@@ -14,7 +14,6 @@ target_sources(${TARGET}
     PRIVATE
         src/main.cpp
         src/DataOutputStream.cpp
-        src/FormattedDataOutputStream.cpp
 )
 
 target_link_libraries(${TARGET}
@@ -22,6 +21,10 @@ target_link_libraries(${TARGET}
             fmt::fmt
             Voxer::Voxer
 )
+
+if(VOXER_ENABLE_FORMATTED)
+    target_sources(${TARGET} PRIVATE src/FormattedDataOutputStream.cpp)
+endif()
 
 target_compile_features(${TARGET} PRIVATE cxx_std_23)
 
