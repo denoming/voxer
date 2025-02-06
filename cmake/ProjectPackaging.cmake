@@ -1,8 +1,5 @@
 include(CPackComponent)
 
-# Set default packaging install prefix path
-set(CPACK_PACKAGING_INSTALL_PREFIX "/")
-
 set(CPACK_PACKAGE_NAME "voxer")
 set(CPACK_PACKAGE_CONTACT "maintainer@denoming.com")
 set(CPACK_PACKAGE_VENDOR "DENOMING")
