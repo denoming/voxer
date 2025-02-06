@@ -3,32 +3,30 @@
 # (c) Copyright 2024
 # Denys Asauliak, denoming@gmail.com
 
-set(TARGET voxer-unit-tests)
+add_executable(voxer-unit-tests "")
 
-add_executable(${TARGET} "")
-
-set_target_properties(${TARGET}
+set_target_properties(voxer-unit-tests
     PROPERTIES
         OUTPUT_NAME voxer-unit-tests
 )
 
-target_sources(${TARGET}
+target_sources(voxer-unit-tests
     PRIVATE src/TextToAudioTest.cpp
 )
 
 target_link_libraries(
-    ${TARGET}
+    voxer-unit-tests
     PRIVATE Voxer::Voxer
             GTest::gtest_main GTest::gmock_main
 )
 
 if(VOXER_ENABLE_FORMATTED)
-    target_sources(${TARGET}
+    target_sources(voxer-unit-tests
         PRIVATE src/TextToFileTest.cpp
                 src/TextToPlaybackTest.cpp
     )
 target_link_libraries(
-    ${TARGET}
+    voxer-unit-tests
     PRIVATE PkgConfig::Gst
             PkgConfig::GstApp
 )

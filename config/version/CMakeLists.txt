@@ -1,7 +1,5 @@
-set(TARGET voxer-version)
-
-add_library(${TARGET} STATIC)
-add_library(Voxer::Version ALIAS ${TARGET})
+add_library(voxer-version STATIC)
+add_library(Voxer::Version ALIAS voxer-version)
 
 find_package(Git)
 if (Git_FOUND)
@@ -13,15 +11,15 @@ if (Git_FOUND)
     )
 endif()
 
-target_sources(${TARGET}
+target_sources(voxer-version
     PRIVATE voxer/Version.hpp
             ${CMAKE_CURRENT_BINARY_DIR}/Version.cpp
 )
 
-target_include_directories(${TARGET}
+target_include_directories(voxer-version
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-target_compile_features(${TARGET} PUBLIC cxx_std_23)
+target_compile_features(voxer-version PUBLIC cxx_std_23)
 
 configure_file(voxer/Version.cpp.in Version.cpp @ONLY)

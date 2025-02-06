@@ -5,30 +5,28 @@
 
 include(GNUInstallDirs)
 
-set(TARGET voxer-cli)
+add_executable(voxer-cli "")
+add_executable(Voxer::Voxer::Cli ALIAS voxer-cli)
 
-add_executable(${TARGET} "")
-add_executable(Voxer::Voxer::Cli ALIAS ${TARGET})
-
-target_sources(${TARGET}
+target_sources(voxer-cli
     PRIVATE
         src/main.cpp
         src/DataOutputStream.cpp
 )
 
-target_link_libraries(${TARGET}
+target_link_libraries(voxer-cli
     PRIVATE cxxopts::cxxopts
             fmt::fmt
             Voxer::Voxer
 )
 
 if(VOXER_ENABLE_FORMATTED)
-    target_sources(${TARGET} PRIVATE src/FormattedDataOutputStream.cpp)
+    target_sources(voxer-cli PRIVATE src/FormattedDataOutputStream.cpp)
 endif()
 
-target_compile_features(${TARGET} PRIVATE cxx_std_23)
+target_compile_features(voxer-cli PRIVATE cxx_std_23)
 
 install(
-    TARGETS ${TARGET}
+    TARGETS voxer-cli
     COMPONENT Voxer_Bin
 )

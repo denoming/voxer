@@ -9,11 +9,11 @@ Dependencies:
 * (vcpkg) utfcpp
 * (vcpkg) uni-algo
 
-Options dependencies (formatted, `VOXER_ENABLE_FORMATTED` cmake option):
+Optional dependencies (formatted, `VOXER_ENABLE_FORMATTED` cmake option):
 
 * (vcpkg) libsndfile
 
-Options dependencies (CLI enabled, `VOXER_ENABLE_CLI` cmake option):
+Optional dependencies (CLI enabled, `VOXER_ENABLE_CLI` cmake option):
 
 * (vcpkg) cxxopts
 
