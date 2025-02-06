@@ -14,6 +14,7 @@ include(cmake/ProjectConfigs.cmake)
 if (PROJECT_IS_TOP_LEVEL)
     include(cmake/ProjectInstall.cmake)
 endif()
+include(cmake/ProjectPackaging.cmake)
 
 add_subdirectory(config)
 add_subdirectory(src)
