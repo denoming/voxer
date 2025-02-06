@@ -77,9 +77,11 @@ if(DEFINED ENV{VOXER_VOICES_DOWNLOAD})
     endif()
 endif()
 
-include(GNUInstallDirs)
-install(
-    DIRECTORY "${VOXER_VOICES_LIST_DIR}"
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/voxer
-    COMPONENT Voxer_Data
-)
+if (VOXER_VOICES_LIST_PROCESSED)
+    include(GNUInstallDirs)
+    install(
+        DIRECTORY "${VOXER_VOICES_LIST_DIR}"
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/voxer
+        COMPONENT Voxer_Data
+    )
+endif()
