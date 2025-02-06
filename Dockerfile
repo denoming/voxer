@@ -39,9 +39,9 @@ RUN mkdir /tmp/onnx \
 USER $USER_NAME
 
 # Install vcpkg
-RUN wget -O /tmp/vcpkg.zip https://github.com/microsoft/vcpkg/archive/refs/tags/2024.09.30.zip \
+RUN wget -O /tmp/vcpkg.zip https://github.com/microsoft/vcpkg/archive/refs/tags/2025.01.13.zip \
  && unzip -q /tmp/vcpkg.zip -d /tmp/vcpkg \
- && mv /tmp/vcpkg/vcpkg-2024.09.30 $VCPKG_ROOT \
+ && mv /tmp/vcpkg/vcpkg-2025.01.13 $VCPKG_ROOT \
  && rm -rf /tmp/vcpkg* \
  && bash -c $VCPKG_ROOT/bootstrap-vcpkg.sh -disable-metrics \
  && mkdir -p $HOME/.local/bin \

@@ -8,7 +8,7 @@ PROJECT_ROOT=$(dirname "$(dirname "$(realpath -s $0)")")
 PLATFORM_ARCH="${1:-arm64}"
 PLATFORM_VARIANT="${2:-v8}"
 USER_NAME="${3:-$(whoami)}"
-ONNX_VERSION="${4:-1.19.2}"
+ONNX_VERSION="${4:-1.20.1}"
 
 # Define variables
 ONNX_URL="https://github.com/microsoft/onnxruntime/releases/download/v${ONNX_VERSION}/onnxruntime-linux-aarch64-${ONNX_VERSION}.tgz"
