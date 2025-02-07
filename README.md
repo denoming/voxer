@@ -1,23 +1,18 @@
 # Voxer
 
-Dependencies:
-
-* espeak-ng (library, headers and data files)
-* (vcpkg) fmt
-* (vcpkg) spdlog
-* (vcpkg) nlohmann-json
-* (vcpkg) utfcpp
-* (vcpkg) uni-algo
-
-Optional dependencies (formatted, `VOXER_ENABLE_FORMATTED` cmake option):
-
-* (vcpkg) libsndfile
-
-Optional dependencies (CLI enabled, `VOXER_ENABLE_CLI` cmake option):
-
-* (vcpkg) cxxopts
-
 ## Prerequisites
+
+| Name          | Source | Component |
+|---------------|--------|-----------|
+| espeak-ng     | host   | core      |
+| onnx-runtime  | host   | core      |
+| fmt           | vcpkg  | core      |
+| spdlog        | vcpkg  | core      |
+| nlohmann-json | vcpkg  | core      |
+| utfcpp        | vcpkg  | core      |
+| uni-algo      | vcpkg  | core      |
+| libsndfile    | vcpkg  | audio     |
+| cxxopts       | vcpkg  | CLI       |
 
 Install espeak-ng:
 
