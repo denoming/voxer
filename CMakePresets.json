@@ -111,35 +111,7 @@
   "workflowPresets": [
     {
       "name": "debug",
-      "displayName": "Debug build workflow",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "debug"
-        },
-        {
-          "type": "build",
-          "name": "debug"
-        }
-      ]
-    },
-    {
-      "name": "release",
-      "displayName": "Release build workflow",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "release"
-        },
-        {
-          "type": "build",
-          "name": "release"
-        }
-      ]
-    },
-    {
-      "name": "debug-and-pack",
-      "displayName": "Debug build workflow",
+      "displayName": "Debug build and pack workflow",
       "steps": [
         {
           "type": "configure",
@@ -156,8 +128,8 @@
       ]
     },
     {
-      "name": "release-and-pack",
-      "displayName": "Release build workflow",
+      "name": "release",
+      "displayName": "Release build and pack workflow",
       "steps": [
         {
           "type": "configure",
@@ -175,35 +147,7 @@
     },
     {
       "name": "debug-docker",
-      "displayName": "Debug build workflow",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "debug-docker"
-        },
-        {
-          "type": "build",
-          "name": "debug-docker"
-        }
-      ]
-    },
-    {
-      "name": "release-docker",
-      "displayName": "Release build workflow",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "release-docker"
-        },
-        {
-          "type": "build",
-          "name": "release-docker"
-        }
-      ]
-    },
-    {
-      "name": "debug-and-pack-docker",
-      "displayName": "Debug build workflow",
+      "displayName": "Debug build and pack workflow (Docker)",
       "steps": [
         {
           "type": "configure",
@@ -220,8 +164,8 @@
       ]
     },
     {
-      "name": "release-and-pack-docker",
-      "displayName": "Release build workflow",
+      "name": "release-docker",
+      "displayName": "Release build and pack workflow (Docker)",
       "steps": [
         {
           "type": "configure",

@@ -94,7 +94,7 @@ unset VOXER_VOICES_LIST
 
 ### Locally
 
-Build (without voices downloading):
+Build and pack (without voices downloading):
 
 ```shell
 # Debug
@@ -103,33 +103,15 @@ $ cmake --workflow --fresh --preset debug
 $ cmake --workflow --fresh --preset release
 ```
 
-Build and packing (without voices downloading):
-
-```shell
-# Debug
-$ cmake --workflow --fresh --preset debug-and-pack
-# Release
-$ cmake --workflow --fresh --preset release-and-pack
-```
-
 ### By Docker
 
-Build:
+Build and pack:
 
 ```shell
 # Debug
 $ cmake --workflow --fresh --preset debug-docker
 # Release
 $ cmake --workflow --fresh --preset release-docker
-```
-
-Build and packing:
-
-```shell
-# Debug
-$ cmake --workflow --fresh --preset debug-and-pack-docker
-# Release
-$ cmake --workflow --fresh --preset release-and-pack-docker
 ```
 
 ## Installing
