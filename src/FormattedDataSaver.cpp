@@ -7,7 +7,6 @@
 
 #include <sndfile.hh>
 #include <spdlog/spdlog.h>
-#include <spdlog/fmt/std.h>
 
 namespace fs = std::filesystem;
 
@@ -25,9 +24,10 @@ toSndFormat(const DataFormat /*format*/)
 
 class FormattedDataSaver::Impl {
 public:
-    explicit Impl(const DataFormat format, fs::path outputFile)
+    explicit
+    Impl(const DataFormat format, fs::path outputFile)
         : _format{format}
-        , _outputFile{std::move(outputFile)}
+          , _outputFile{std::move(outputFile)}
     {
     }
 
@@ -43,7 +43,7 @@ public:
         _handle = SndfileHandle{_outputFile, SFM_WRITE, kFormat, channels, sampleRate};
         if (not _handle) {
             SPDLOG_ERROR("Unable to create handle: outputFile<{}>, error<{}>",
-                         _outputFile,
+                         _outputFile.native(),
                          _handle.strError());
             throw std::runtime_error{"Unable to create handle"};
         }
