@@ -71,7 +71,7 @@ if(VOXER_ENABLE_FORMATTED)
         PRIVATE FormattedDataHandler.cpp
                 FormattedDataSaver.cpp
     )
-    target_link_libraries(voxer PRIVATE SndFile::sndfile)
+    target_link_libraries(voxer PRIVATE PkgConfig::SndFile)
 endif()
 
 target_compile_features(voxer PUBLIC cxx_std_20)
