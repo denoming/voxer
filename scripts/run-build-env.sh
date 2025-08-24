@@ -2,28 +2,35 @@
 
 set -e
 
-PROJECT_ROOT=$(dirname "$(dirname "$(realpath -s $0)")")
+make_image=false
+push_image=false
+platform="arm64"
 
-# Handle arguments
-PLATFORM_ARCH="${1:-arm64}"
-PLATFORM_VARIANT="${2:-v8}"
-USER_NAME="${3:-$(whoami)}"
-ONNX_VERSION="${4:-1.20.1}"
+while getopts "mpe:" flag; do
+  case "$flag" in
+    m)
+      make_image=true
+      ;;
+    p)
+      push_image=true
+      ;;
+    e)
+      platform="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
 
-# Define variables
-ONNX_URL="https://github.com/microsoft/onnxruntime/releases/download/v${ONNX_VERSION}/onnxruntime-linux-aarch64-${ONNX_VERSION}.tgz"
-USER_UID="$(id ${USERNAME} -u)"
-USER_GID="$(id ${USERNAME} -g)"
-PLATFORM="${PLATFORM_ARCH}${PLATFORM_VARIANT}"
-IMAGE_NAME="my/voxer:${PLATFORM_ARCH}${PLATFORM_VARIANT}"
+root_dir="$(dirname "$(dirname "$(realpath -s $0)")")"
+user_uid="$(id -u)"
+user_gid="$(id -g)"
+image="denoming/voxer:latest"
 
-echo "=============================="
-echo "        Platform: ${PLATFORM}"
-echo "           Image: ${IMAGE_NAME}"
-echo "        Username: ${USER_NAME}"
-echo "         User ID: ${USER_UID}"
-echo "        Group ID: ${USER_GID}"
-echo "=============================="
+onnx_ver="1.21.0"
+onnx_url="https://github.com/microsoft/onnxruntime/releases/download/v${onnx_ver}/onnxruntime-linux-aarch64-${onnx_ver}.tgz"
 
 command -v docker > /dev/null
 if [ $? != 0 ]; then
@@ -32,42 +39,61 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-build_image() {
-  BUILD_CMD=(docker build \
-  --platform "linux/${PLATFORM_ARCH}/${PLATFORM_VARIANT}" \
-  --tag "${IMAGE_NAME}" \
-  --build-arg "PLATFORM=${PLATFORM}" \
-  --build-arg "USER_NAME=${USER_NAME}" \
-  --build-arg "USER_UID=${USER_UID}" \
-  --build-arg "USER_GID=${USER_GID}" \
-  --build-arg "ONNX_URL=${ONNX_URL}" \
-  --file "${PROJECT_ROOT}/Dockerfile"
-  "${PROJECT_ROOT}")
+make_image() {
+  CMD=(docker build \
+  --platform "linux/amd64,linux/arm64" \
+  --tag "${image}" \
+  --build-arg "BASE_CONTAINER=python:3.12-bookworm" \
+  --build-arg "USERNAME=bender" \
+  --build-arg "USER_UID=${user_uid}" \
+  --build-arg "USER_GID=${user_gid}" \
+  --build-arg "ONNX_URL=${onnx_url}" \
+  --file "${root_dir}/Dockerfile"
+  "${root_dir}")
 
-  if [ -z "$(docker images -q ${IMAGE_NAME})" ]; then
-    echo -e "Building <${IMAGE_NAME}> image"
-    echo "${BUILD_CMD[@]}"
-    "${BUILD_CMD[@]}"
+  if [ -z "$(docker images -q ${image})" ]; then
+    echo -e "Building <${image}> image"
+    echo "${CMD[@]}"
+    "${CMD[@]}"
   fi
 }
 
 run_image() {
-  RUN_CMD=(docker run -it \
-  --platform "linux/${PLATFORM_ARCH}/${PLATFORM_VARIANT}" \
-  --rm \
-  --user "${USER_UID}:${USER_GID}" \
-  --volume "${HOME}/.ssh:${HOME}/.ssh" \
-  --volume "${PROJECT_ROOT}:${PROJECT_ROOT}" \
-  --network host \
-  --workdir "${PROJECT_ROOT}" \
-  "${IMAGE_NAME}")
+  if ! [ -n "$(docker images -q ${image})" ]; then
+    echo "Pull <${image}> docker image"
+    docker pull ${image}
+  fi
 
-  if [ -n "$(docker images -q ${IMAGE_NAME})" ]; then
-    "${RUN_CMD[@]}"
+  CMD=(docker run -it \
+  --platform "linux/${platform}" \
+  --rm \
+  --user "${user_uid}:${user_gid}" \
+  --volume "${HOME}/.ssh:${HOME}/.ssh" \
+  --volume "${root_dir}:${root_dir}" \
+  --network host \
+  --workdir "${root_dir}" \
+  "${image}" /bin/bash)
+
+  echo -e "Running <${image}> image"
+  echo "${CMD[@]}"
+  "${CMD[@]}"
+}
+
+push_image() {
+  CMD=(docker image push ${image})
+  if [ -n "$(docker images -q ${image})" ]; then
+    echo -e "Pushing <${image}> image"
+    echo "${CMD[@]}"
+    "${CMD[@]}"
   else
-    echo "Docker image <${IMAGE_NAME}> is absent"
+    echo "Docker image <${image}> is absent"
   fi
 }
 
-build_image
+if [ "$make_image" == "true" ]; then
+  make_image
+fi
+if [ "$push_image" == "true" ]; then
+  push_image
+fi
 run_image
