@@ -5,4 +5,6 @@
 
 find_package(PkgConfig)
 
+# Debian/Ubuntu:
+#  sudo apt install -y libespeak-ng-dev
 pkg_check_modules(eSpeakNg REQUIRED IMPORTED_TARGET espeak-ng)
