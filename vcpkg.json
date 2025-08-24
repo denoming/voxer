@@ -9,8 +9,7 @@
     "fmt",
     "spdlog",
     "nlohmann-json",
-    "utfcpp",
-    "uni-algo"
+    "utfcpp"
   ],
   "features": {
     "cli": {

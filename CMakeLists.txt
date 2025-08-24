@@ -17,6 +17,7 @@ endif()
 include(cmake/ProjectPackaging.cmake)
 
 add_subdirectory(config)
+add_subdirectory(external)
 add_subdirectory(src)
 if(VOXER_ENABLE_TESTS)
     add_subdirectory(test)
