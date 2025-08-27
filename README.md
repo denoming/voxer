@@ -1,5 +1,7 @@
 # Voxer
 
+[![CI](https://github.com/denoming/voxer/actions/workflows/build.yaml/badge.svg)](https://github.com/denoming/voxer/actions/workflows/build.yaml)
+
 ## Prerequisites
 
 | Name          | Source | Component |
