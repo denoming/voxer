@@ -21,7 +21,7 @@ apt install -y build-essential autoconf automake autopoint sudo vim git \
                cmake ninja-build gdb curl tar zip unzip sudo dbus flex \
                bison nasm texinfo wget file libpulse-dev libspdlog-dev \
                libespeak-ng-dev espeak-ng-data libfmt-dev nlohmann-json3-dev \
-               libutfcpp-dev libsndfile1-dev
+               libutfcpp-dev libsndfile1-dev clang-format-16
 
 mkdir /tmp/onnx
 wget -qO- $ONNX_URL | tar xz -C /tmp/onnx --strip-components=1

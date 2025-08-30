@@ -14,6 +14,11 @@
 
 include(FeatureSummary)
 
+option(VOXER_ENABLE_CODE_FORMAT "Enable code formatting" ON)
+add_feature_info(
+    VOXER_ENABLE_CODE_FORMAT VOXER_ENABLE_CODE_FORMAT "Enable code formatting support"
+)
+
 option(VOXER_ENABLE_TESTS "Enable unit tests" OFF)
 if(VOXER_ENABLE_TESTS)
     list(APPEND VCPKG_MANIFEST_FEATURES "tests")
