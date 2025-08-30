@@ -21,10 +21,8 @@ namespace jar {
 void
 DataHandler::onBegin(int sampleRate, int sampleSize, int channels)
 {
-    SPDLOG_DEBUG("onBegin(sampleRate<{}>, sampleSize<{}>, channels<{}>)",
-                 sampleRate,
-                 sampleSize,
-                 channels);
+    SPDLOG_DEBUG(
+        "onBegin(sampleRate<{}>, sampleSize<{}>, channels<{}>)", sampleRate, sampleSize, channels);
 }
 
 void

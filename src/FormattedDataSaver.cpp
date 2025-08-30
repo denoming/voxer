@@ -33,10 +33,9 @@ toSndFormat(const DataFormat /*format*/)
 
 class FormattedDataSaver::Impl {
 public:
-    explicit
-    Impl(const DataFormat format, fs::path outputFile)
+    explicit Impl(const DataFormat format, fs::path outputFile)
         : _format{format}
-          , _outputFile{std::move(outputFile)}
+        , _outputFile{std::move(outputFile)}
     {
     }
 
