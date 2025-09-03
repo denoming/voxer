@@ -19,9 +19,11 @@ ONNX_URL=https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnx
 apt update
 apt install -y build-essential autoconf automake autopoint sudo vim git \
                cmake ninja-build gdb curl tar zip unzip sudo dbus flex \
-               bison nasm texinfo wget file libpulse-dev libspdlog-dev \
+               bison nasm texinfo wget file libpulse-dev libspdlog-dev libcxxopts-dev \
                libespeak-ng-dev espeak-ng-data libfmt-dev nlohmann-json3-dev \
-               libutfcpp-dev libsndfile1-dev clang-format-16
+               libutfcpp-dev libsndfile1-dev clang-format-16 libgtest-dev \
+               libgmock-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+               gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
 
 mkdir /tmp/onnx
 wget -qO- $ONNX_URL | tar xz -C /tmp/onnx --strip-components=1
