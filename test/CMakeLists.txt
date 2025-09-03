@@ -26,7 +26,8 @@ target_sources(voxer-unit-tests
 target_link_libraries(
     voxer-unit-tests
     PRIVATE Voxer::Voxer
-            GTest::gtest_main GTest::gmock_main
+            GTest::gtest_main
+            GTest::gmock_main
 )
 
 if(VOXER_ENABLE_FORMATTED)
@@ -34,15 +35,14 @@ if(VOXER_ENABLE_FORMATTED)
         PRIVATE src/TextToFileTest.cpp
                 src/TextToPlaybackTest.cpp
     )
-target_link_libraries(
-    voxer-unit-tests
-    PRIVATE PkgConfig::Gst
-            PkgConfig::GstApp
-)
+    target_link_libraries(voxer-unit-tests
+        PRIVATE PkgConfig::Gst
+                PkgConfig::GstApp
+    )
 endif()
 
 if (NOT CMAKE_CROSSCOMPILING)
-    gtest_discover_tests(${TARGET} TEST_LIST testList)
+    gtest_discover_tests(voxer-unit-tests TEST_LIST testList)
     set_property(
         DIRECTORY APPEND
         PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_LIST_DIR}/setTestsOptions.cmake
