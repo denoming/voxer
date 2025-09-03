@@ -15,10 +15,15 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <voxer/Options.hpp>
 #include <voxer/Voxer.hpp>
+
+#include <filesystem>
 
 using namespace jar;
 using namespace testing;
+
+namespace fs = std::filesystem;
 
 class MockDataHandler : public DataHandler {
 public:
@@ -29,8 +34,9 @@ public:
 
 /**
  * Following env variables must be set:
- *  - VOXER_MODEL_FILE
  *  - VOXER_ESPEAK_DIR
+ *    (e.g. "/usr/lib/aarch64-linux-gnu/espeak-ng-data" for arm64 platform)
+ *    (e.g. "/usr/lib/x86_64-linux-gnu/espeak-ng-data" for amd64 platform)
  **/
 TEST(TextToAudioTest, SynthesizeText)
 {
@@ -39,9 +45,14 @@ TEST(TextToAudioTest, SynthesizeText)
     EXPECT_CALL(handler, onData(NotNull(), Gt(0))).Times(AtLeast(1));
     EXPECT_CALL(handler, onEnd).Times(1);
 
+    const fs::path voicesDir{VOXER_VOICES_LIST_DIR};
+    ASSERT_TRUE(fs::exists(voicesDir)) << "Dir with voices models does not exist";
+    const fs::path modelPath{voicesDir / "en_US-amy-medium.onnx"};
+    ASSERT_TRUE(fs::exists(modelPath)) << "Model path does not exist";
+
     EXPECT_NO_THROW({
         Voxer voxer;
-        ASSERT_TRUE(voxer.configure());
+        ASSERT_TRUE(voxer.configure(modelPath));
         voxer.textToAudio("Hello world", handler);
         voxer.cleanup();
     });

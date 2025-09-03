@@ -73,17 +73,24 @@ make_image() {
 }
 
 run_image() {
-  if ! [ -n "$(docker images -q ${image})" ]; then
+  if [ -z "$(docker images -q ${image})" ]; then
     echo "Pull <${image}> docker image"
     docker pull ${image}
   fi
 
+  # Note: If you want to change platform you need to change VOXER_ESPEAK_DIR env accordingly
+  #       to specify espeak-data files location
   CMD=(docker run -it \
-  --platform "linux/${platform}" \
+  --platform "linux/arm64" \
   --rm \
   --user "${user_uid}:${user_gid}" \
   --volume "${HOME}/.ssh:${HOME}/.ssh" \
   --volume "${root_dir}:${root_dir}" \
+  --volume "${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse" \
+  --env VOXER_VOICES_DOWNLOAD="1" \
+  --env VOXER_VOICES_LIST="en_US+amy+medium" \
+  --env VOXER_ESPEAK_DIR="/usr/lib/aarch64-linux-gnu/espeak-ng-data" \
+  --env PULSE_SERVER="unix:${XDG_RUNTIME_DIR}/pulse/native" \
   --network host \
   --workdir "${root_dir}" \
   "${image}" /bin/bash)

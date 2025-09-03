@@ -15,20 +15,31 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <voxer/Options.hpp>
 #include <voxer/Voxer.hpp>
 #include <voxer/FormattedDataHandler.hpp>
 
 #include <gst/gst.h>
 #include <gst/app/gstappsrc.h>
 
+#include <filesystem>
 #include <thread>
 
 using namespace jar;
 using namespace testing;
 
+namespace fs = std::filesystem;
+
+// Check "0" to "1" in order to play sound on pulse audio device
+#if 0
 static const char* kPipelineDescription = R"(
-    appsrc name=src ! wavparse ! audioconvert ! audioresample ! autoaudiosink
+    appsrc name=src ! wavparse ! audioconvert ! audioresample ! pulsesink
 )";
+#else
+static const char* kPipelineDescription = R"(
+    appsrc name=src ! wavparse ! audioconvert ! audioresample ! fakeaudiosink
+)";
+#endif
 
 class TextToPlaybackTest : public FormattedDataHandler, public Test {
 public:
@@ -169,17 +180,23 @@ TextToPlaybackTest::destroyPipeline() const
 
 /**
  * Following env variables must be set:
- *  - VOXER_MODEL_FILE
  *  - VOXER_ESPEAK_DIR
+ *    (e.g. "/usr/lib/aarch64-linux-gnu/espeak-ng-data" for arm64 platform)
+ *    (e.g. "/usr/lib/x86_64-linux-gnu/espeak-ng-data" for amd64 platform)
  **/
 TEST_F(TextToPlaybackTest, SynthesizeTextAndPlayback)
 {
+    const fs::path voicesDir{VOXER_VOICES_LIST_DIR};
+    ASSERT_TRUE(fs::exists(voicesDir)) << "Dir with voices models does not exist";
+    const fs::path modelPath{voicesDir / "en_US-amy-medium.onnx"};
+    ASSERT_TRUE(fs::exists(modelPath)) << "Model path does not exist";
+
     createPipeline();
     startPipeline();
 
     EXPECT_NO_THROW({
         Voxer voxer;
-        ASSERT_TRUE(voxer.configure());
+        ASSERT_TRUE(voxer.configure(modelPath));
         voxer.textToAudio("Hello world. This world is very beautiful.", *this);
         voxer.cleanup();
     });

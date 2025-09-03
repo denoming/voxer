@@ -15,34 +15,42 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <voxer/Options.hpp>
 #include <voxer/Voxer.hpp>
 #include <voxer/FormattedDataSaver.hpp>
 
 #include <filesystem>
-
-namespace fs = std::filesystem;
 
 static const auto* kAudioFile{"output.wav"};
 
 using namespace jar;
 using namespace testing;
 
+namespace fs = std::filesystem;
+
 /**
  * Following env variables must be set:
- *  - VOXER_MODEL_FILE
  *  - VOXER_ESPEAK_DIR
+ *    (e.g. "/usr/lib/aarch64-linux-gnu/espeak-ng-data" for arm64 platform)
+ *    (e.g. "/usr/lib/x86_64-linux-gnu/espeak-ng-data" for amd64 platform)
  **/
 TEST(TextToFileTest, SynthesizeTextWithSaving)
 {
     FormattedDataSaver handler{DataFormat::Wav, kAudioFile};
 
+    const fs::path voicesDir{VOXER_VOICES_LIST_DIR};
+    ASSERT_TRUE(fs::exists(voicesDir)) << "Dir with voices models does not exist";
+    const fs::path modelPath{voicesDir / "en_US-amy-medium.onnx"};
+    ASSERT_TRUE(fs::exists(modelPath)) << "Model path does not exist";
+
     EXPECT_NO_THROW({
         Voxer voxer;
-        ASSERT_TRUE(voxer.configure());
+        ASSERT_TRUE(voxer.configure(modelPath));
         voxer.textToAudio("Hello world. This world is very beautiful.", handler);
         voxer.cleanup();
     });
 
+    ASSERT_TRUE(fs::exists(kAudioFile));
     EXPECT_THAT(fs::file_size(kAudioFile), Gt(0));
     fs::remove(kAudioFile);
 }
