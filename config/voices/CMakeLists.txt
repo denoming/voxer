@@ -23,7 +23,7 @@ else()
 endif()
 
 set(VOXER_VOICES_LIST_DIR
-    "${VOXER_STAGE_DIR}/voxer/voices"
+    "${VOXER_STAGING_DIR}/voxer/voices"
     CACHE STRING "Base dir of voices")
 set(VOXER_VOICES_MODEL_BASE_URL
     "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/<lang-code>/<lang>/<name>/<quality>/<lang>-<name>-<quality>.onnx?download=true"

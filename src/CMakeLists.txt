@@ -57,7 +57,7 @@ target_sources(voxer
 
 target_include_directories(voxer
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-           $<BUILD_INTERFACE:${VOXER_STAGE_DIR}>
+           $<BUILD_INTERFACE:${VOXER_STAGING_DIR}>
 )
 
 target_link_libraries(voxer
