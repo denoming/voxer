@@ -15,17 +15,14 @@
       "inherits": ["dc-debug-vcpkg-dynamic"],
       "binaryDir": "build-debug",
       "displayName": "Debug",
+      "environment": {
+        "VOXER_VOICES_DOWNLOAD": "1",
+        "VOXER_VOICES_LIST": "en_US+amy+medium"
+      },
       "cacheVariables": {
         "VOXER_ACTIVE_LOG_LEVEL": "Debug",
+        "VOXER_ENABLE_TESTS": true,
         "VOXER_ENABLE_CLI": true
-      },
-      "errors": {
-        "dev": false,
-        "deprecated": false
-      },
-      "warnings": {
-        "dev": true,
-        "deprecated": true
       }
     },
     {
@@ -33,26 +30,41 @@
       "inherits": ["dc-release-vcpkg-dynamic"],
       "binaryDir": "build-release",
       "displayName": "Release",
-      "cacheVariables": {
-        "VOXER_ACTIVE_LOG_LEVEL": "Info",
-        "VOXER_ENABLE_CLI": true
+      "environment": {
+        "VOXER_VOICES_DOWNLOAD": "1",
+        "VOXER_VOICES_LIST": "en_US+amy+medium"
       },
-      "errors": {
-        "dev": true,
-        "deprecated": true
+      "cacheVariables": {
+        "VOXER_ACTIVE_LOG_LEVEL": "Info"
       }
     },
     {
       "name": "debug-docker",
       "inherits": ["dc-debug"],
       "binaryDir": "build-debug-docker",
-      "displayName": "Debug [Docker]"
+      "displayName": "Debug [Docker]",
+      "environment": {
+        "VOXER_VOICES_DOWNLOAD": "1",
+        "VOXER_VOICES_LIST": "en_US+amy+medium"
+      },
+      "cacheVariables": {
+        "VOXER_ACTIVE_LOG_LEVEL": "Debug",
+        "VOXER_ENABLE_TESTS": true,
+        "VOXER_ENABLE_CLI": true
+      }
     },
     {
       "name": "release-docker",
       "inherits": ["dc-release"],
       "binaryDir": "build-release-docker",
-      "displayName": "Release [Docker]"
+      "displayName": "Release [Docker]",
+      "environment": {
+        "VOXER_VOICES_DOWNLOAD": "1",
+        "VOXER_VOICES_LIST": "en_US+amy+medium"
+      },
+      "cacheVariables": {
+        "VOXER_ACTIVE_LOG_LEVEL": "Info"
+      }
     }
   ],
   "buildPresets": [
