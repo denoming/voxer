@@ -27,28 +27,28 @@ Install ONNX (GPU):
 
 ```shell
 $ export DEST_DIR=$HOME/.local
-$ wget https://github.com/microsoft/onnxruntime/releases/download/v1.20.1/onnxruntime-linux-x64-gpu-1.20.1.tgz
-$ tar xf onnxruntime-linux-x64-gpu-1.20.1.tgz -C /tmp
-$ pushd /tmp/onnxruntime-linux-x64-gpu-1.20.1
+$ wget https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-gpu-1.21.0.tgz
+$ tar xf onnxruntime-linux-x64-gpu-1.21.0.tgz -C /tmp
+$ pushd /tmp/onnxruntime-linux-x64-gpu-1.21.0
 $ mkdir -p $DEST_DIR/{include/onnxruntime,lib}
 $ cp -r include/* $DEST_DIR/include/onnxruntime
 $ cp -r lib/* $DEST_DIR/lib
 $ popd
-$ rm -f onnxruntime-linux-x64-gpu-1.20.1.tgz
+$ rm -f onnxruntime-linux-x64-gpu-1.21.0.tgz
 ```
 
 Install ONNX (CPU, mutually exclusive with GPU variant, see above):
 
 ```shell
 $ export DEST_DIR=$HOME/.local
-$ wget https://github.com/microsoft/onnxruntime/releases/download/v1.20.1/onnxruntime-linux-x64-1.20.1.tgz
-$ tar xf onnxruntime-linux-x64-1.20.1.tgz -C /tmp
-$ pushd /tmp/onnxruntime-linux-x64-1.20.1
+$ wget https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-1.21.0.tgz
+$ tar xf onnxruntime-linux-x64-1.21.0.tgz -C /tmp
+$ pushd /tmp/onnxruntime-linux-x64-1.21.0
 $ mkdir -p $DEST_DIR/{include/onnxruntime,lib}
 $ cp -r include/* $DEST_DIR/include/onnxruntime
 $ cp -r lib/* $DEST_DIR/lib
 $ popd
-$ rm -f onnxruntime-linux-x64-1.20.1.tgz
+$ rm -f onnxruntime-linux-x64-1.21.0.tgz
 ````
 
 ## Introduction
@@ -71,45 +71,53 @@ See the list of available voices to download at `config/voices/voices.csv` file.
 Output artifacts default location is `<build-dir>/stage`.
 
 Packing artifacts includes the following files:
-
 * `libvoxer_<version>_.deb`
 * `libvoxer-dev_<version>_.deb`
 * (optional) `libvoxer-data_<version>_.deb`
 
-Enable voice downloading:
+### By Docker (recommended)
 
+Run docker container:
 ```shell
-export VOXER_VOICES_DOWNLOAD=1
-export VOXER_VOICES_LIST="en_US+amy+medium;uk_UA+lada+x_low"
+$ bash scripts/run-build-env.sh -m
 ```
 
-Disable voice downloading:
-
+Define variable whether to download voice models:
 ```shell
+# Run to enable voice models downloading
+export VOXER_VOICES_DOWNLOAD=1
+export VOXER_VOICES_LIST="en_US+amy+medium;uk_UA+lada+x_low"
+# Run to disable voice models downloading
 unset VOXER_VOICES_DOWNLOAD
 unset VOXER_VOICES_LIST
 ```
 
-### Locally
-
-Build and pack (without voices downloading):
-
-```shell
-# Debug
-$ cmake --workflow --fresh --preset debug
-# Release
-$ cmake --workflow --fresh --preset release
-```
-
-### By Docker
-
-Build and pack:
-
+Build and create packages:
 ```shell
 # Debug
 $ cmake --workflow --fresh --preset debug-docker
 # Release
 $ cmake --workflow --fresh --preset release-docker
+```
+
+### Locally
+
+Define variable whether to download voice models:
+```shell
+# Run to enable voice models downloading
+export VOXER_VOICES_DOWNLOAD=1
+export VOXER_VOICES_LIST="en_US+amy+medium;uk_UA+lada+x_low"
+# Run to disable voice models downloading
+unset VOXER_VOICES_DOWNLOAD
+unset VOXER_VOICES_LIST
+```
+
+Build and create packages:
+```shell
+# Debug
+$ cmake --workflow --fresh --preset debug
+# Release
+$ cmake --workflow --fresh --preset release
 ```
 
 ## Installing
