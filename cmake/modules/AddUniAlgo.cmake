@@ -12,22 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.25.1)
+include(FetchContent)
 
-include(cmake/ProjectOptions.cmake)
+FetchContent_Declare(uni-algo
+    URL https://github.com/uni-algo/uni-algo/archive/v1.2.0.tar.gz
+    FIND_PACKAGE_ARGS 1.2 CONFIG
+)
 
-project(voxer VERSION 0.2.6
-              HOMEPAGE_URL "Voxer Library")
-
-include(cmake/ProjectConfigs.cmake)
-if (PROJECT_IS_TOP_LEVEL)
-    include(cmake/ProjectInstall.cmake)
-endif()
-include(cmake/ProjectPackaging.cmake)
-
-add_subdirectory(config)
-add_subdirectory(src)
-if(VOXER_ENABLE_TESTS)
-    add_subdirectory(test)
-endif()
-add_subdirectory(tools)
+FetchContent_MakeAvailable(uni-algo)

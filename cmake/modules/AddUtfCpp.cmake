@@ -12,5 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(uni-algo)
-add_subdirectory(utfcpp)
+include(FetchContent)
+
+FetchContent_Declare(utfcpp
+    URL https://github.com/nemtrif/utfcpp/archive/refs/tags/v4.0.6.tar.gz
+    FIND_PACKAGE_ARGS 4.0.6 CONFIG
+)
+
+FetchContent_MakeAvailable(utfcpp)
