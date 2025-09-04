@@ -14,14 +14,6 @@
 
 include_guard()
 
-if (DEFINED ENV{VOXER_VOICES_LIST})
-    set(VOXER_VOICES_LIST $ENV{VOXER_VOICES_LIST}
-        CACHE STRING "The list voices to download")
-else()
-    set(VOXER_VOICES_LIST "en_US+amy+medium;uk_UA+lada+x_low"
-        CACHE STRING "The list voices to download")
-endif()
-
 set(VOXER_VOICES_LIST_DIR
     "${VOXER_STAGING_DIR}/voxer/voices"
     CACHE STRING "Base dir of voices")
@@ -80,18 +72,18 @@ function(DownloadVoices downloadVoices)
     endforeach()
 endfunction()
 
-if(DEFINED ENV{VOXER_VOICES_DOWNLOAD})
-    if(VOXER_VOICES_LIST_PROCESSED)
+if(VOXER_VOICES_DOWNLOAD)
+    if(VOXER_VOICES_DOWNLOADED)
         message(STATUS "Skip voices downloading as already done")
     else()
         DownloadVoices("${VOXER_VOICES_LIST}")
-        set(VOXER_VOICES_LIST_PROCESSED ON
+        set(VOXER_VOICES_DOWNLOADED ON
             CACHE BOOL
-            "Indicator whether voices are downloaded" FORCE)
+            "Indicator whether voices was already downloaded" FORCE)
     endif()
 endif()
 
-if (VOXER_VOICES_LIST_PROCESSED)
+if (VOXER_VOICES_DOWNLOADED)
     include(GNUInstallDirs)
     install(
         DIRECTORY "${VOXER_VOICES_LIST_DIR}"

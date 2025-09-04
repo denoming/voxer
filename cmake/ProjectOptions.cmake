@@ -43,9 +43,20 @@ add_feature_info(
     VOXER_ENABLE_FORMATTED VOXER_ENABLE_FORMATTED "Build project with enabled formatted audio data support"
 )
 
-option(VOXER_VOICES_DOWNLOAD "Enable voices downloading" OFF)
-add_feature_info(
-    VOXER_VOICES_DOWNLOAD VOXER_VOICES_DOWNLOAD "Download voices model and configuration"
-)
+if(DEFINED ENV{VOXER_VOICES_DOWNLOAD})
+    set(VOXER_VOICES_DOWNLOAD ON
+        CACHE BOOL "Whether to download voice models or not")
+else()
+    set(VOXER_VOICES_DOWNLOAD OFF
+        CACHE BOOL "Do not download voice models (default)")
+endif()
+
+if(DEFINED ENV{VOXER_VOICES_LIST})
+    set(VOXER_VOICES_LIST $ENV{VOXER_VOICES_LIST}
+        CACHE STRING "The list voices to download")
+else()
+    set(VOXER_VOICES_LIST "en_US+amy+medium;uk_UA+lada+x_low"
+        CACHE STRING "The list voices to download")
+endif()
 
 feature_summary(WHAT ALL)
